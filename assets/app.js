@@ -1,11 +1,70 @@
 var mainApp = angular.module("mainApp", []);
-mainApp.controller('mainCtrl',function($scope,$http,$timeout){
+
+
+mainApp.value('fooConfig', {
+	config1: true,
+	config2: "Default config2 but it can changes"
+});
+
+
+mainApp.factory('foo',function(){
+
+	var private = 'private';
+	function getPrivate(){
+		return private;
+	}
+
+	return {
+		variable: 'This is public',
+		getPrivate: getPrivate
+	}
+});
+
+
+mainApp.factory('foo2', function() {
+
+return new Foobar();
+
+});
+
+function Foobar() {
+
+var thisIsPrivate = "Private";
+
+this.variable = "This is public";
+
+this.getPrivate = function() {
+
+return thisIsPrivate;
+
+};
+
+}
+
+
+mainApp.controller('mainCtrl',function($scope,$http,$timeout,foo,fooConfig){
 	$scope.p = 'hello huajie';
+
+	console.log(foo);
+	console.log(fooConfig);
+
+	//所有的service都是单例，所有修改一处之后其他地方都会改变
+	fooConfig.variable = 'modified public';
+
+
+
+
+
+
+
+
+
+
+
 
 
 
 	//第一课是Promise，这周一定要理解设计思路
-
 	function doSth() {
         return new Promise(function (resolve, reject) {
             //做点什么异步的事情
@@ -68,7 +127,7 @@ mainApp.controller('mainCtrl',function($scope,$http,$timeout){
         }
     }
 
-    $http('/utils/getCityList').get({coId:'all'});
+    //$http('/utils/getCityList').get({coId:'all'});
 
 
 })
