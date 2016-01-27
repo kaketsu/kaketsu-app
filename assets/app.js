@@ -95,6 +95,28 @@ mainApp.controller('mainCtrl',function($scope,$http,$timeout,foo,fooConfig){
     doSth().then(doSth2).then(doSth3).then(doSth);
 
 
+
+    async function test(){
+            console.log('test start');
+            await doSth2();
+            console.log('test end');
+        }
+
+    function test2(){
+        setTimeout(function(){
+            console.log('test2 async');
+        },2500)
+    }
+
+    test();
+    test2();
+
+
+
+
+
+
+
     function $http(url) {
         var core = {
             ajax:function(method, url, args){
