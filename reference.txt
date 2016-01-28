@@ -17,3 +17,9 @@ http://www.w3cplus.com/tools/dev-tips.html
 
 
 http://f2er.club/
+
+Fetch使用
+http://www.w3ctech.com/topic/854
+
+Promise
+http://www.html-js.com/article/Promise-translation-JavaScript-Promise-devil-details
