@@ -76,7 +76,7 @@ mainApp.controller('mainCtrl',function($scope,$http,$timeout,foo,fooConfig){
         })
     }
 
-    function doSth2() {
+   function adoSth2() {
         return new Promise(function (resolve, reject) {
             //做点什么异步的事情
             //结束的时候调用 resolve，比如：
@@ -92,13 +92,13 @@ mainApp.controller('mainCtrl',function($scope,$http,$timeout,foo,fooConfig){
         return Promise.resolve(doSth);
     }
 
-    doSth().then(doSth2).then(doSth3).then(doSth);
+    //doSth().then(doSth2).then(doSth3).then(doSth);
 
 
 
-    async function test(){
+    function test(){
             console.log('test start');
-            await doSth2();
+            doSth2();
             console.log('test end');
         }
 
