@@ -16,7 +16,25 @@ mainApp.controller('asyncCtrl',function($scope,$http,$timeout){
     };
 
     start();
+
+
+
 */
+//fetch
+
+window.fetch(
+            '/utils/getPdSource',
+            {
+                method: "POST",
+                headers:{
+                "X-Requested-With": "XMLHttpRequest",
+                "credentials": 'same-origin',
+                "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8"
+                }
+            }
+        ).then(function(data){
+                console.log(data);})
+
 
 })
 
