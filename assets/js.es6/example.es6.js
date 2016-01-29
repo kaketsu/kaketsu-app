@@ -9,7 +9,7 @@ export class MyClass {
 }
 
 
-    .directive('userCheck',function(){
+    /*.directive('userCheck',function(){
         return {
             restrict: 'A',
             scope: true,
@@ -19,4 +19,4 @@ export class MyClass {
 
             }
         }
-    })
+    })*/

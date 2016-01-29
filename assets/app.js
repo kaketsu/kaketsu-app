@@ -22,23 +22,15 @@ mainApp.factory('foo',function(){
 
 
 mainApp.factory('foo2', function() {
-
-return new Foobar();
-
+    return new Foobar();
 });
 
 function Foobar() {
-
-var thisIsPrivate = "Private";
-
-this.variable = "This is public";
-
-this.getPrivate = function() {
-
-return thisIsPrivate;
-
-};
-
+    var thisIsPrivate = "Private";
+    this.variable = "This is public";
+    this.getPrivate = function() {
+        return thisIsPrivate;
+    };
 }
 
 
@@ -64,8 +56,14 @@ mainApp.controller('mainCtrl',function($scope,$http,$timeout,foo,fooConfig){
 
 
 
-	//第一课是Promise，这周一定要理解设计思路
-	function doSth() {
+
+
+})
+.controller('secondCtrl',function($scope,$http,$timeout,foo,fooConfig){
+
+/*
+    //第一课是Promise，这周一定要理解设计思路
+    function doSth() {
         return new Promise(function (resolve, reject) {
             //做点什么异步的事情
             //结束的时候调用 resolve，比如：
@@ -117,6 +115,8 @@ mainApp.controller('mainCtrl',function($scope,$http,$timeout,foo,fooConfig){
 
 
 
+
+
     function $http(url) {
         var core = {
             ajax:function(method, url, args){
@@ -152,5 +152,6 @@ mainApp.controller('mainCtrl',function($scope,$http,$timeout,foo,fooConfig){
     //$http('/utils/getCityList').get({coId:'all'});
 
 
+    */
 })
 

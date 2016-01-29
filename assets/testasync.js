@@ -22,6 +22,8 @@ mainApp.controller('asyncCtrl',function($scope,$http,$timeout){
 */
 //fetch
 
+
+/*
 window.fetch(
             '/utils/getPdSource',
             {
@@ -34,6 +36,8 @@ window.fetch(
             }
         ).then(function(data){
                 console.log(data);})
+
+*/
 
 
 })
