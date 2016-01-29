@@ -5,7 +5,26 @@
 		<script src="../bower_components/angular/angular.js"></script>
 	</head>
 	<body ng-app="mainApp" ng-controller="mainCtrl">
+
+
+
+
 		<span ng-controller='asyncCtrl'></span>
+
+		<form name="myForm">
+ 			<div contenteditable
+  					name="myWidget" ng-model="userContent"
+  					srctrip-br="true"
+  					required>Change me!
+  			</div>
+  			<span ng-show="myForm.myWidget.$error.required">Required!</span>
+ 			<hr>
+ 			<textarea ng-model="userContent"></textarea>
+		</form>
+
+
+
+
 		<script src="app.js"></script>
 		<script src="testasync.js"></script>		
 		<script>

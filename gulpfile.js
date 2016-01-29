@@ -8,6 +8,17 @@ gulp.task('default',function(){
     .pipe( gulp.dest('assets/js'));
 });
 
+
+
+gulp.task('babel', function(){
+    gulp.src('src/app.js')
+        .pipe(babel({
+            presets: ['es2015']
+        }))
+        .pipe(gulp.dest(''));
+});
+
+
 gulp.task('es6',()=> {
     return (
         gulp.src("assets2/js.es6/**/*.js")
