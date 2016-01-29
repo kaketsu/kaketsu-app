@@ -76,13 +76,13 @@ mainApp.controller('mainCtrl',function($scope,$http,$timeout,foo,fooConfig){
         })
     }
 
-   function adoSth2() {
+   function doSth2() {
         return new Promise(function (resolve, reject) {
             //做点什么异步的事情
             //结束的时候调用 resolve，比如：
             setTimeout(function () {
                 console.log('doSth2');
-                resolve();
+                resolve('hello qiuqiu');
             }, 3000);
         })
     }
@@ -96,9 +96,9 @@ mainApp.controller('mainCtrl',function($scope,$http,$timeout,foo,fooConfig){
 
 
 
-    function test(){
+    async function test(){
             console.log('test start');
-            doSth2();
+            console.log(await doSth2());
             console.log('test end');
         }
 
