@@ -9,7 +9,7 @@ a[6]();
 
 
 function test1(){
-  return new Promise(function(){
+  return new Promise(function(resolve,reject){
   	setTimeout(function(){
   		console.log('test');
     	resolve('test1');

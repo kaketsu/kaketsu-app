@@ -33,6 +33,6 @@ var MyClass = exports.MyClass = function () {
         require:'?^ngModel',
         link: function ($scope, element, attr, model) {
             console.log(model);
-         }
+          }
     }
 })*/
