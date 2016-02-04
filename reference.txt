@@ -23,3 +23,7 @@ http://www.w3ctech.com/topic/854
 
 Promise
 http://www.html-js.com/article/Promise-translation-JavaScript-Promise-devil-details
+
+
+Jquery和angular思维模式
+http://damoqiongqiu.iteye.com/blog/1926475
