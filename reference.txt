@@ -27,3 +27,7 @@ http://www.html-js.com/article/Promise-translation-JavaScript-Promise-devil-deta
 
 Jquery和angular思维模式
 http://damoqiongqiu.iteye.com/blog/1926475
+
+
+作业部落markdown
+https://www.zybuluo.com/

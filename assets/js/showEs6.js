@@ -47,3 +47,37 @@ var fn = function () {
 }();
 
 fn();
+
+//解构赋值指定默认值
+console.log('解构赋值指定默认值');
+var _x = { x: 1 };
+var x = _x.x;
+var _x$y = _x.y;
+var y = _x$y === undefined ? 5 : _x$y;
+
+console.log('x:' + x, 'y:' + y);
+
+//ES6 关于函数的
+
+function log(x) {
+  var y = arguments.length <= 1 || arguments[1] === undefined ? 'World' : arguments[1];
+
+  console.log(x, y);
+}
+
+log('Hello'); // Hello World
+log('Hello', 'China'); // Hello China
+log('Hello', ''); // Hello
+
+function foo(_ref) {
+  var x = _ref.x;
+  var _ref$y = _ref.y;
+  var y = _ref$y === undefined ? 5 : _ref$y;
+
+  console.log(x, y);
+}
+
+foo({}); // undefined, 5
+foo({ x: 1 }); // 1, 5
+foo({ x: 1, y: 2 }); // 1, 2
+foo(); // TypeError: Cannot read property 'x' of undefined
