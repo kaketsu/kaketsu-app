@@ -60,10 +60,19 @@ var Observer = (function(slice) {
     }
 
     return function() {
-        this.on = this.subscribe = bind;
-        this.off = this.unsubscribe = unbind;
-        this.trigger = this.publish = trigger;
+        //this.on = this.subscribe = bind;
+        //this.off = this.unsubscribe = unbind;
+        //this.trigger = this.publish = trigger;
+
+        this.subscribe = bind;
+        this.unsubscribe = unbind;
+        this.publish = trigger;
         this.one = one;
         return this;
     };
+
 })([].slice);
+
+//这里return的是一个function，然后function作为构造函数再进行一个新建一个对象
+
+
