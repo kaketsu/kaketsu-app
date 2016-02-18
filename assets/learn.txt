@@ -1,0 +1,6 @@
+1.popup修改，layer这个插件学习。使用如何的设计模式。
+
+2.MessageBox可否去参照其他的，变成监听者模式，不采用复杂的回调。看看其他的插件eg alertifyjs
+http://webres.wang/10-javascript-notification-plugins/
+
+3.
