@@ -5,6 +5,7 @@
 var Observer = (function(slice) {
 
     function bind(event, fn) {
+        //event为事件，fn为函数操作
         var events = this.events = this.events || {},
             parts = event.split(/\s+/),
             i = 0,

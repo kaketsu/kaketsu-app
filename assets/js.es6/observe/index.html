@@ -3,7 +3,7 @@
 
 <head>
     <meta http-equiv="Content-type" content="text/html; charset=utf-8" />
-    <title>圣诞主题</title>
+    <title>Observer</title>
     <script src="observer.js"></script>
 </head>
 
@@ -13,6 +13,7 @@
     <script type="text/javascript">
     //观察者
     var observer = new Observer();
+    var observer2 = new Observer();
 
     //page函数
     //模拟运行1秒的一个函数
@@ -20,12 +21,16 @@
         setTimeout(function() {
             //发布一个完成的时间
             observer.publish("compelte")
+            observer2.publish("remind")
         }, 3000)
     }
 
     //订阅一个完成的时间
     observer.subscribe("compelte", function() {
         alert("page任务完成")
+    })
+    observer2.subscribe("remind",function(){
+        console.log();
     })
 
     //触发任务
