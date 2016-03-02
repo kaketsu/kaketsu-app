@@ -34,3 +34,6 @@ https://www.zybuluo.com/
 
 
 115.29.188.30:8080
+
+
+//自己写一个事件转播，响应触发的结构 如同emit broadCast吧
