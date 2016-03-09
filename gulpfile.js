@@ -6,6 +6,10 @@ gulp.task('default',function(){
     console.log('hello world');
 });
 
+gulp.task('es6',()=>{
+    console.log('hello es6');
+})
+
 gulp.task('babel',function(){
     return  gulp.src('assets/js.es6/*.js')
         .pipe(babel({
