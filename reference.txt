@@ -37,3 +37,7 @@ https://www.zybuluo.com/
 
 
 //自己写一个事件转播，响应触发的结构 如同emit broadCast吧
+
+
+node 
+//http://course.tianmaying.com/node#comment-list

@@ -1,0 +1,26 @@
+<html>
+	<head>
+		<title>js-module-7day</title>
+	</head>
+
+	<body>
+
+		<script>
+			var Module = (function($){
+    			var _$body = $("body");     // we can use jQuery now!
+    			var foo = function(){
+        			console.log(_$body);    // 特权方法
+    			}
+    			// Revelation Pattern
+    			return {
+        			foo: foo
+    				}
+			})(jQuery)
+
+			Module.foo();
+			//这就是模块模式 也是现代模块实现的基石
+			//深入理解JavaScript 模块模式		
+
+		</script>
+	</body>
+</html>

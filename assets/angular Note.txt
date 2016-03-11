@@ -1,0 +1,2 @@
+使用ng-app中指定的模块配置$injector
+$injector
