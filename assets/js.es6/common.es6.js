@@ -316,15 +316,34 @@ const zouke = {};
 })();
 
 (()=> {
+    const data=new WeakMap();
+    function tableClick(e) {
+        const action = e.target.dataset.action;
+        if (action){
+            const id = e.target.dataset.id;
+            const d=data.get(e.currentTarget)[id];
+            d.action=action;
+            d.id=id;
+            e.currentTarget.trigger('table:op:'+action,d);
+            e.currentTarget.trigger('table:op',d);
+        }
+    }
     zouke.table = {
         getRender (buttons) {
-            return function (data, type, rowData, meta) {
+            return function (_, type, rowData, meta) {
+
+                if(!data.has(meta.settings.nTable)){
+                    data.set(meta.settings.nTable,{});
+                }
+                const d=data.get(meta.settings.nTable);
+                d[rowData[0]]=rowData;
+
                 if (type === 'display'){
                     let btn = '';
 
-                    for (let {name,cls} of Array.isArray(buttons)?buttons:buttons(data,type,rowData,meta)){
+                    for (let {name,cls,action,permission} of Array.isArray(buttons)?buttons:buttons(_,type,rowData,meta)){
                         btn += `
-    <a data-row="${meta.row}" data-id="${rowData[0]}" class="${cls}" href="#" title="${name}">
+    <a data-row="${'row' in meta?meta.row:'auto'}" ${permission?`data-permission="${permission}"`:''} data-id="${rowData[0]}" data-action="${action}" class="${cls}" href="#" title="${name}">
     </a>`
                     }
                     return (
@@ -333,55 +352,142 @@ const zouke = {};
                 return null;
             }
         },
+        getCheckBox(){
+            return function(_, type, rowData, meta){
+                if(!data.has(meta.settings.nTable)){
+                    data.set(meta.settings.nTable,{});
+                }
+                const cid = rowData[0];
+                const check = `<label>
+                            <input data-content="" type="checkbox" class="ace"  data-id="${rowData[0]}" ng-click="checkData($event,${rowData[0]})" ng-checked="ids.indexOf(${rowData[0]}) != -1">
+                            <span class="lbl" >
+                            </span>
+                       </label>`;
+                return check;
+            }
+        },
         defaultButtons:{
             get view(){
                 return {
                     name:'查看',
-                    cls:'view blue ace-icon fa fa-search-plus bigger-130'
+                    cls:'view blue ace-icon fa fa-search-plus bigger-130',
+                    action:'view'
                 }
             },
             get edit(){
                 return {
                     name:'编辑',
-                    cls:'edit green ace-icon fa fa-pencil bigger-130'
+                    cls:'edit green ace-icon fa fa-pencil bigger-130',
+                    action:'edit'
                 }
             },
             get clone(){
                 return {
                     name:'克隆',
-                    cls:'clone ace-icon fa fa-copy bigger-130'
+                    cls:'clone ace-icon fa fa-copy bigger-130',
+                    action:'clone'
                 }
             },
             get remove(){
                 return {
                     name:'删除',
-                    cls:'remove red act-icon fa fa-times bigger-130'
+                    cls:'remove red act-icon fa fa-times bigger-130',
+                    action:'remove'
                 }
             },
             get undo(){
                 return {
                     name:'恢复',
-                    cls:'undo ace-icon fa fa-undo bigger-130'
+                    cls:'undo ace-icon fa fa-undo bigger-130',
+                    action:'undo'
                 }
             },
             get debit(){
                 return {
                     name:'催款',
-                    cls:'debit ace-icon fa fa-money bigger-130'
+                    cls:'debit ace-icon fa fa-money bigger-130',
+                    action:'debit'
                 }
             },
             get book(){
                 return {
                     name:'预订',
-                    cls:'book ace-icon fa fa-money bigger-130'
+                    cls:'book ace-icon fa fa-money bigger-130',
+                    action:'book'
                 }
             },
             get exp(){
                 return {
                     name:'导出',
-                    cls:'exp ace-icon fa fa-sign-out bigger-130'
+                    cls:'exp ace-icon fa fa-sign-out bigger-130',
+                    action:'exp'
+                }
+            },
+            /******** for order start ********/
+            get pending(){
+                return {
+                    name:'待确认',
+                    cls:'pending ace-icon fa fa-pencil bigger-130',
+                    action:'pending'
+                }
+            },
+            get sending(){
+                return {
+                    name:'待发货',
+                    cls:'sending ace-icon fa fa-pencil bigger-130',
+                    action:'sending'
+                }
+            },
+            get error(){
+                return {
+                    name:'下单错误',
+                    cls:'error ace-icon fa fa-pencil bigger-130',
+                    action:'error'
+                }
+            },
+            get done(){
+                return {
+                    name:'已完成',
+                    cls:'done ace-icon fa fa-pencil bigger-130',
+                    action:'done'
+                }
+            },
+            get refunding(){
+                return {
+                    name:'待退款',
+                    cls:'refunding ace-icon fa fa-pencil bigger-130',
+                    action:'refunding'
+                }
+            },
+            get refunded(){
+                return {
+                    name:'已退款',
+                    cls:'refunded ace-icon fa fa-search-plus bigger-130',
+                    action:'refunded'
+                }
+            },
+            get crawl(){
+                return {
+                    name:'抓取',
+                    cls:'crawl ace-icon fa fa-hand-grab-o bigger-130 ',
+                    action:'crawl'
+                }
+            },
+            get online(){
+                return {
+                    name:'上线',
+                    cls:'online ace-icon fa fa-arrow-up  bigger-130 ',
+                    action:'online'
+                }
+            },
+            get offline(){
+                return {
+                    name:'下线',
+                    cls:'online ace-icon fa fa-arrow-down  bigger-130 ',
+                    action:'offline'
                 }
             }
+            /******** for order end ********/
         },
         selector(container){
             return {
@@ -399,6 +505,41 @@ const zouke = {};
                     return this[cacheName];
                 }
             };
+        },
+        initEvent(table){
+            table.on('click', tableClick);
+        },
+        highlight(table,id){
+            if(Array.isArray(id)){
+                const templateTHList = table.$a('thead>tr>th');
+                const tr=document.createElement('tr');
+                tr.classList.add('high-row');
+                for(let i = 0;i<id.length;++i){
+                    const td=document.createElement('td');
+                    td.className=templateTHList[i].className.replace(/\s*sorting(\s*)?|(\s*)?sorting\s*/,' ');
+
+                    tr.appendChild(td);
+                    if(i===id.length-1 && (Array.isArray(id[i])||typeof id[i] === 'function')){
+                        //last && opt
+                        const rowData=[...id].pop();
+                        td.innerHTML=this.getRender(id[i])(undefined,'display',rowData,{
+                            settings:{
+                                nTable:table
+                            }
+                        })
+                    }else{
+                        td.innerHTML=id[i];
+                    }
+                }
+                const tbody=table.$('tbody');
+                if(tbody.firstElementChild){
+                    tbody.insertBefore(tr,tbody.firstElementChild);
+                }else{
+                    tbody.appendChild(tr);
+                }
+            }else{
+                table.$(`[data-id="${id}"]`).closest('tr').classList.add('high-row');
+            }
         }
     }
 })();
@@ -417,7 +558,7 @@ const zouke = {};
     Node.prototype.trigger=function(type,data){
         const e = type instanceof Event?type:document.createDispatchEvent(type.toString());
         if(data){
-            event.data=data;
+            e.$data=data;
         }
         this.dispatchEvent(e);
     };
@@ -464,53 +605,68 @@ const zouke = {};
         return urlComponents.join('&');
     }
 
-    function uploadFileToQNAsync(token, file, key){
-        const formdata = new FormData();
-        formdata.append("key", key);
-        formdata.append("token", token);
-        formdata.append('file', file);
 
-        const xhr = new XMLHttpRequest();
-        xhr.open("POST", "http://upload.qiniu.com/");
-        //xhr.setRequestHeader("content-type","multipart/form-data");
-
-        xhr.timeout = 10000;
-
-        const promise = new Promise((r, j)=> {
-            xhr.onreadystatechange = function () {
-                if (xhr.readyState === 4) {
-
-                    if (this.status === 0) {
-                        //跨域无权限
-                        //同时会触发error事件
-                    } else {
-                        if (this.status === 200) {
-                            //成功
-
-                            r(JSON.parse(this.responseText));
-
-                        } else {
-                            j(this.status)
-                        }
-                    }
+    const qiniu={
+        CHUNK_SIZE:4<<20,//4MB
+        _uploadChunk(url,token,chunkBlob){
+            return window.fetch(url,{
+                method:'POST',
+                body:chunkBlob,
+                headers:{
+                    'Authorization':'UpToken '+token,
+                    'Content-Type':'application/octet-stream'
                 }
-            };
-            xhr.onerror = function () {
-                j();
-            };
-            xhr.ontimeout = function () {
-                j("timeout")
-            };
-        });
+            }).then(res=>res.json());
+        },
+        uploadDirectAsync(token,file,key){
+            const formdata=new FormData();
+            formdata.append('key', key);
+            formdata.append('token', token);
+            formdata.append('file', file);
 
+            return window.fetch('http://upload.qiniu.com/',{
+                method:'POST',
+                body:formdata
+            }).then(res=>res.json());
+        },
 
-        xhr.send(formdata);
-        return promise;
+        async uploadByBlock(token,file,key){
+            const chunks=Math.ceil(file.size/this.CHUNK_SIZE);
+            const lastChunkSize=file.size-this.CHUNK_SIZE*(chunks-1);
+            const blockCtx=[];
+            for(let i=0;i<chunks;++i){
+                const last=(i===chunks-1);//最后一片
+                const chunkBlob=last?file.slice(i*this.CHUNK_SIZE):file.slice(i*this.CHUNK_SIZE,(i+1)*this.CHUNK_SIZE);
+                blockCtx.push((await this._uploadChunk(`http://upload.qiniu.com/mkblk/${last?lastChunkSize:this.CHUNK_SIZE}?name=${key}&chunk=${i}&chunks=${chunks}`,token,chunkBlob)).ctx);
+            }
+            const encodeName=zouke.tools.URLSafeBase64Encode(key);
+            return await (await window.fetch(`http://upload.qiniu.com/mkfile/${file.size}/key/${encodeName}/fname/${encodeName}`,{
+                method:'POST',
+                headers:{
+                    'Authorization':'UpToken '+token,
+                    'Content-Type':'text/plain;charset=UTF-8'
+                },
+                body:blockCtx.join(',')
+            })).json()
+        },
+        async getImageInfoAsync(url){
+            const json = await (await window.fetch(url+'?imageInfo')).json();
+            if(json.code) throw(json.error);
+            return json;
+        }
+    };
+
+    function uploadFileToQNAsync(token, file, key){
+        if(file.size<qiniu.CHUNK_SIZE){
+            return qiniu.uploadDirectAsync(token,file,key);
+        }else{
+            return qiniu.uploadByBlock(token,file,key);
+        }
     }
     async function uploadFileWithSaveBaseInfoAsync(token,cdn,file,name,pkey){
         const result = await uploadFileToQNAsync(token, file, name);
         const src=encodeURI(cdn+result.key);
-        const baseInfo = await zouke.resource.getImageInfoAsync(src);
+        const baseInfo = await qiniu.getImageInfoAsync(src);
 
         let info={
             pkey,
@@ -532,16 +688,17 @@ const zouke = {};
             fetchAsync(url, {headers={},data={}}={}){
                 const method = 'POST';
 
-                Object.assign(headers, {
+                const _headers = Object.assign( {
                     "X-Requested-With": "XMLHttpRequest",
                     "credentials": 'same-origin',
                     "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8"
-                });
+                },headers);
 
                 return window.fetch(url, {
                     method,
-                    headers,
-                    body:formUrlEncode(data)
+                    headers:_headers,
+                    credentials:'same-origin',
+                    body:_headers['Content-Type'].toLowerCase().includes('json')? (angular?angular.toJson(data):JSON.stringify(data)):formUrlEncode(data)
                 })
             },
             async uploadFileAsync(file,pkey='50000'){
@@ -570,10 +727,114 @@ const zouke = {};
                 }
                 return json;
             },
-            async getImageInfoAsync(url){
-                const json = await (await window.fetch(url+'?imageInfo')).json();
-                if(json.code) throw(json.error);
+            async postJSONAsync(url,data){
+                const response = await window.zouke.net.fetchAsync(url, {data,headers:{"Content-Type": "application/JSON; charset=UTF-8"}});
+                const json = await response.json();
+                if (json.code < 0) {
+                    alert(json.msg);
+                    throw json.code;
+                }
                 return json;
+            }
+        },
+        tools:{
+            utf8Encode(argString){
+                if (argString === null || typeof argString === 'undefined') {
+                    return '';
+                }
+
+                var string = (argString + ''); // .replace(/\r\n/g, '\n').replace(/\r/g, '\n');
+                var utftext = '',
+                    start, end, stringl = 0;
+
+                start = end = 0;
+                stringl = string.length;
+                for (var n = 0; n < stringl; n++) {
+                    var c1 = string.charCodeAt(n);
+                    var enc = null;
+
+                    if (c1 < 128) {
+                        end++;
+                    } else if (c1 > 127 && c1 < 2048) {
+                        enc = String.fromCharCode(
+                            (c1 >> 6) | 192, (c1 & 63) | 128
+                        );
+                    } else if (c1 & 0xF800 ^ 0xD800 > 0) {
+                        enc = String.fromCharCode(
+                            (c1 >> 12) | 224, ((c1 >> 6) & 63) | 128, (c1 & 63) | 128
+                        );
+                    } else { // surrogate pairs
+                        if (c1 & 0xFC00 ^ 0xD800 > 0) {
+                            throw new RangeError('Unmatched trail surrogate at ' + n);
+                        }
+                        var c2 = string.charCodeAt(++n);
+                        if (c2 & 0xFC00 ^ 0xDC00 > 0) {
+                            throw new RangeError('Unmatched lead surrogate at ' + (n - 1));
+                        }
+                        c1 = ((c1 & 0x3FF) << 10) + (c2 & 0x3FF) + 0x10000;
+                        enc = String.fromCharCode(
+                            (c1 >> 18) | 240, ((c1 >> 12) & 63) | 128, ((c1 >> 6) & 63) | 128, (c1 & 63) | 128
+                        );
+                    }
+                    if (enc !== null) {
+                        if (end > start) {
+                            utftext += string.slice(start, end);
+                        }
+                        utftext += enc;
+                        start = end = n + 1;
+                    }
+                }
+
+                if (end > start) {
+                    utftext += string.slice(start, stringl);
+                }
+
+                return utftext;
+            },
+            base64Encode(data){
+                var b64 = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=';
+                var o1, o2, o3, h1, h2, h3, h4, bits, i = 0,
+                    ac = 0,
+                    enc = '',
+                    tmp_arr = [];
+
+                if (!data) {
+                    return data;
+                }
+
+                data = this.utf8Encode(data + '');
+
+                do { // pack three octets into four hexets
+                    o1 = data.charCodeAt(i++);
+                    o2 = data.charCodeAt(i++);
+                    o3 = data.charCodeAt(i++);
+
+                    bits = o1 << 16 | o2 << 8 | o3;
+
+                    h1 = bits >> 18 & 0x3f;
+                    h2 = bits >> 12 & 0x3f;
+                    h3 = bits >> 6 & 0x3f;
+                    h4 = bits & 0x3f;
+
+                    // use hexets to index into b64, and append result to encoded string
+                    tmp_arr[ac++] = b64.charAt(h1) + b64.charAt(h2) + b64.charAt(h3) + b64.charAt(h4);
+                } while (i < data.length);
+
+                enc = tmp_arr.join('');
+
+                switch (data.length % 3) {
+                    case 1:
+                        enc = enc.slice(0, -2) + '==';
+                        break;
+                    case 2:
+                        enc = enc.slice(0, -1) + '=';
+                        break;
+                }
+
+                return enc;
+            },
+            URLSafeBase64Encode(v){
+                return this.base64Encode(v).replace(/\//g, '_').replace(/\+/g, '-');
             }
         },
         $(cssSelect, node=document){
@@ -1316,3 +1577,37 @@ const zouke = {};
     window.zouke.ImageForm = ImageForm;
 })();
 
+(()=>{
+    //权限控制类
+    const pri = new WeakMap();
+
+    zouke.PermissionManager=class PermissionManager{
+        constructor(acl){
+            const allPermissionNames=Object.keys(acl);
+            const permissionMap={};
+
+            let styleText='';
+            for(let [key,value] of Object.entries(acl)){
+                permissionMap[key]=!!value;
+                if(!permissionMap[key]){
+                    styleText+=`[data-permission="${key}"]{display:none!important;}`;
+                }
+            }
+            pri.set(this,{
+                all:allPermissionNames,
+                map:permissionMap
+            });
+
+            const style=document.createElement('style');
+            style.dataset.from='permission';
+            style.innerHTML=styleText;
+            document.head.appendChild(style);
+        }
+        canDo(p){
+            return pri.get(this).map[p];
+        }
+        get nameList(){
+            return [...pri.get(this).all];
+        }
+    }
+})();
