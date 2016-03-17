@@ -7,6 +7,19 @@ mainApp.value('fooConfig', {
 });
 
 
+/*
+注入service，相当于注入service定义是的function实例。
+注入factory，相当于注入factory定义时的函数调用入口。
+注入provider，相当于注入provider内$get定义的函数实例的调用
+*/
+
+
+/*
+用 Factory 就是创建一个对象，为它添加属性，然后把这个对象返回出来。
+你把 service 传进 controller 之后，
+在 controller 里这个对象里的属性就可以通过 factory 使用了。
+*/
+
 mainApp.factory('foo',function(){
 
 	var private = 'private';
@@ -15,14 +28,9 @@ mainApp.factory('foo',function(){
 	}
 
 	return {
-		variable: 'This is public',
+		publicVariable: 'This is public',
 		getPrivate: getPrivate
 	}
-});
-
-
-mainApp.factory('foo2', function() {
-    return new Foobar();
 });
 
 function Foobar() {
@@ -32,35 +40,59 @@ function Foobar() {
         return thisIsPrivate;
     };
 }
+mainApp.factory('foo2', function() {
+    return new Foobar();
+});
+
+/*
+Service 是用"new"关键字实例化的。因此，你应该给"this"添加属性，
+然后 service 返回"this"。你把 service 传进 controller 之后，
+在controller里 "this" 上的属性就可以通过 service 来使用了。
+*/
+
+mainApp.service('myService',function(){
+    var _artist = 'HuaJie';
+    this.getArtist = function(){
+        return _artist;
+    }
+})
+
+/*
+Providers 是唯一一种你可以传进 .config() 函数的 service。
+当你想要在 service 对象启用之前，先进行模块范围的配置，那就应该用 provider。
+*/
+
+mainApp.config(function($provide) {
+    $provide.provider('greeting', function(){
+        this.$get = function(){
+            return function(name){
+                alert("Hello, " + name);
+            }
+        }
+    })
+}); 
 
 
 mainApp.controller('mainCtrl',function($scope,$http,$timeout,foo,fooConfig){
-	$scope.p = 'hello huajie';
-
-	console.log(foo);
-	console.log(fooConfig);
+	console.log('start main');
 
 	//所有的service都是单例，所有修改一处之后其他地方都会改变
+    console.log(fooConfig);
 	fooConfig.variable = 'modified public';
 
+})
 
 
-
-
-
-
-
-
-
-
-
-
-
-
+.controller('subCtrl1',function($scope, $http, foo, fooConfig){
+    console.log('start sub1');
+    console.log(fooConfig);
+    console.log(foo.getPrivate());
 
 })
-.controller('secondCtrl',function($scope,$http,$timeout,foo,fooConfig){
 
+
+
+mainApp.controller('secondCtrl',function($scope,$http,$timeout,foo,fooConfig){
 /*
     //第一课是Promise，这周一定要理解设计思路
     function doSth() {
