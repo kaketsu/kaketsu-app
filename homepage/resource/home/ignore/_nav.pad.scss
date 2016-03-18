@@ -1,0 +1,45 @@
+html,body{
+  height:100%;
+}
+body{
+  font-family:'Helvetica Neue', Helvetica, Arial, 'Hiragino Sans GB', 'Microsoft Yahei', 微软雅黑, SimSun, 宋体, Heiti, 黑体, sans-serif;
+  -webkit-font-smoothing: antialiased;
+
+  margin:auto;
+  position:relative;
+
+  &>header{
+    position:fixed;
+    width:100%;
+    left:0;
+    top:0;
+    height:70px;
+    z-index:11;
+    background:#0E1A1D;
+
+    color:#877666;
+    font-size:16px;
+
+    .logo{
+      padding-left:0.625rem;
+      img{height:40px;}
+    }
+    .tab{
+      padding-right:0.625rem;
+      text-align:right;
+      &>a{
+        display:inline-block;
+        vertical-align:middle;
+        line-height:70px;
+        &.active{color:#f1ca9d;}
+      }
+    }
+  }
+
+  &>.container{
+    position:absolute;
+    width:100%;
+    top:70px;
+    bottom:0;
+  }
+}

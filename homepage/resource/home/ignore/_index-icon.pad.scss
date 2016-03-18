@@ -1,0 +1,53 @@
+.index-icon{
+  display:inline-block;
+  width:2.97rem;
+  height:2.91rem;
+  background:url("/resource/home/img/icon.svg") no-repeat;
+  background-size:22.16rem 13.875rem;
+  &.cs{
+    width:2.34rem;
+    height:2.97rem;
+    background-position:0 bottom;
+  }
+  &.rg{
+    width:2.44rem;
+    height:2.97rem;
+    background-position:-2.69rem bottom;
+  }
+  &.sv{
+    width:2.5rem;
+    height:2.97rem;
+    background-position:-5.44rem bottom;
+  }
+
+  &.ask{
+    background-position:0 0;
+  }
+  &.case{
+    background-position:0 -3.84rem;
+  }
+  &.dj{
+    background-position:-7.75rem -3.875rem;
+  }
+  &.bc{
+    background-position:-3.84rem 0;
+  }
+  &.fc{
+    background-position:-3.84rem -3.84rem;
+  }
+  &.tr{
+    background-position:-7.75rem 0;
+  }
+  &.b{
+    width:8.44rem;
+    height:9.375rem;
+    background-position:right top;
+  }
+  &.phone{
+    background:url("/resource/home/img/icon-addition.svg") no-repeat;background-size:100% 100%;
+    background-position:left top;
+    width:0.625rem;
+    height:0.69rem;
+    &.big{width:0.94rem;height:1.03rem;}
+  }
+}

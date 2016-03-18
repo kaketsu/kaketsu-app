@@ -1,0 +1,162 @@
+html,body,head,div,span,h1,h2,h3,h4,h5,h6,button,input,a,address,article,aside,b,canvas,caption,table,code,dd,del,datalist,dl,dt,big,em,figure,
+iframe,header,form,label,figcaption,fieldset,img,li,ul,main,map,nav,ol,embed,output,select,textarea,option,pre,p,param,section,small,strong,sub,sup,source,
+summary,thead,time,tbody,tfoot,th,tr,td,tt,var,video,audio,wbr,footer{
+  @at-root {
+    .mb, .mb &{-webkit-tap-highlight-color: rgba(0,0,0,0);}
+  }
+  padding:0;
+  margin:0;
+}
+body{
+  font-size:16px;
+}
+a{
+  color:inherit;
+  text-decoration: none;
+  outline:none;
+}
+input,textarea{
+  font-size:inherit;
+  outline:none;
+  &::-webkit-input-placeholder{
+    color:inherit;
+  }
+  &:-moz-placeholder{
+    color:inherit;
+  }
+  &:-ms-input-placeholder{
+    color:inherit;
+  }
+}
+
+input[type="number"]{
+  &::-webkit-inner-spin-button,
+  &::-webkit-outer-spin-button{
+    -webkit-appearance: none;
+    margin:0;
+  }
+}
+
+.flex{
+  display:-webkit-box;
+  display:-webkit-flex;
+  display:flex;
+  -webkit-align-items:flex-start;
+  align-items:flex-start;
+
+  &.flex-center{
+    -moz-box-align:center;
+    -webkit-box-align:center;
+    -webkit-align-items:center;
+    align-items:center;
+  }
+  &.flex-vertical{
+    -webkit-box-orient:vertical;
+    -webkit-flex-direction: column;
+    flex-direction: column;
+    &.flex-full>*{
+      width:100%;
+    }
+  }
+  &.flex-full {
+    -webkit-box-align:stretch;
+    & > * {
+      -webkit-align-content: stretch;
+      align-content: stretch;
+      box-sizing: border-box;
+    }
+  }
+  .flex-1{
+    width:0;
+    -webkit-box-flex:1;
+    -webkit-flex:1;
+    flex:1;
+  }
+}
+
+[contenteditable]{
+  display:block!important;
+  outline:none;
+  padding:5px;
+  white-space:pre;
+  border:1px solid #aaa;
+  line-height:1.2em;
+  -webkit-user-select:text;
+  -moz-user-select:text;
+  user-select:text;
+  &:empty:before{
+    content:attr(placeholder);
+    display:block;
+    color:#aaa;
+  }
+}
+@each $number in 5,10,15,20,25,30{
+  @each $dir in left,right,top,bottom{
+    .#{$dir}-#{$number}{
+      margin-#{$dir}:#{$number}px!important;
+    }
+  }
+  .top-bottom-#{$number}{
+    margin-top:#{$number}px!important;
+    margin-bottom:#{$number}px!important;
+  }
+  .left-right-#{$number}{
+    margin-left:#{$number}px!important;
+    margin-right:#{$number}px!important;
+  }
+  .padding-#{$number}{
+    padding:#{$number}px!important;
+  }
+  .padding-h-#{$number} {
+    padding-left: #{$number}px!important;
+    padding-right: #{$number}px!important;
+  }
+  .padding-v-#{$number} {
+    padding-top: #{$number}px!important;
+    padding-bottom: #{$number}px!important;
+  }
+}
+@each $number in 110,120,130,140,150,160,170,180,190,200{
+  .bigger-#{$number}{
+    font-size:#{$number/100}em!important;
+  }
+}
+
+.inline{
+  display:inline-block;
+}
+.block{
+  display:block;
+}
+.center{
+  text-align:center;
+}
+.margin-auto{
+  margin:auto;
+}
+.margin-h-auto{
+  margin-left:auto;
+  margin-right:auto;
+}
+.margin-v-auto{
+  margin-top:auto;
+  margin-bottom:auto;
+}
+
+.resizable{
+  resize:both;
+  overflow:auto;
+}
+.resizable-v{
+  resize:vertical;
+  overflow-y:auto;
+}
+.resizable-h{
+  resize:horizontal;
+  overflow-x:auto;
+}
+
+
+@import "ignore/scss-component/btn";
+@import "ignore/scss-component/modal";
+

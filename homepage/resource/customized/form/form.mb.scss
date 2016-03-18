@@ -1,0 +1,148 @@
+@import "../../home/ignore/index-icon.mb";
+
+body>.form{
+  color:#877666;
+  padding-bottom:0.5rem;
+  &>header>img{
+    width:100%;
+  }
+  &>.input{
+    /*-webkit-box-pack:center;
+    -moz-box-pack:center;
+    -webkit-justify-content: center;
+    justify-content: center;*/
+    padding:1rem 0.5rem 0;
+    input,textarea{
+      /*@media (max-height:504px) {
+        height:34px;
+      }
+      height:40px;*/
+      border-radius:3px;
+      color:#877666;
+      font-size:0.56rem;
+      height:1.6rem;
+      border:1px solid #eee;
+      width:100%;
+      box-sizing:border-box;
+      padding:0.4rem 0.2rem;
+      &:invalid,&.warn{
+        border:1px solid red;
+        //box-shadow:0 0 5px 1px red
+      }
+      &::-webkit-input-placeholder{
+        color:#999;
+      }
+      &:-moz-placeholder{
+        color:#999;
+      }
+      &:-ms-input-placeholder{
+        color:#999;
+      }
+      -webkit-appearance: none;
+      -moz-appearance: none;
+    }
+    textarea{
+      height:2.8rem;
+      line-height:1.1em;
+      overflow:auto;
+      resize:none;
+    }
+    &>div{
+      position:relative;
+      padding:0.2rem 0;
+      &>div:last-child{
+        margin-left:14px;
+      }
+    }
+
+    .btn-validate{
+      /*@media (max-height:504px) {
+        height:34px;
+        line-height:34px;
+      }
+      height:40px;
+      line-height:40px;*/
+      //position:absolute;
+      //right:0;
+      //top:0;
+      //padding:0;
+      //width:7em;
+      font-weight:normal;
+      height:1.6rem;
+      display:block;
+      text-align:center;
+      line-height:1.6rem;
+      border-radius:3px;
+      padding:0;
+      color:#877666;
+      background:#f1ca9d;
+      &.btn-disabled{
+        background:#eee!important;
+        color:#F0CA9E!important;
+      }
+    }
+
+    /*&>footer{
+      text-align:center;
+      padding:16px 0;
+      a,span{
+        display:inline-block;
+        vertical-align: middle;
+      }
+      a{
+        padding-left:0.5em;
+      }
+      span{
+        width:18px;
+        height:18px;
+        background:url("/resource/common/icon/phone-call.svg");
+        background-size:100%;
+        color:#666666;
+      }
+    }*/
+  }
+  footer{
+    padding:0 0.5rem;
+    margin:0.8rem 0 0;
+  }
+  .submit{
+    display:block;
+    font-size:0.68rem;
+    height:1.8rem;
+    line-height:1.8rem;
+    padding:0;
+    color:#877666;
+    background:#f1ca9d;
+    border-radius:3px;
+    font-weight:normal;
+  }
+}
+
+.modal.success-box>.container {
+  -webkit-box-flex:1;
+  -moz-flex:1;
+  -webkit-flex:1;
+  flex:1;
+  margin:auto 0.72rem;
+  background: white;
+  padding: 30px 0;
+  text-align: center;
+  .right {
+    width: 60px;
+    display: inline-block;
+    margin: auto;
+  }
+  .text {
+    color: #857666;
+    line-height: 1.8em;
+    padding: 0.8em;
+    font-size: 14px;
+  }
+  .btn {
+    font-size: 18px;
+    width: 200px;
+    background: #F0CA9E;
+    color: #857666;
+    font-weight: normal;
+  }
+}

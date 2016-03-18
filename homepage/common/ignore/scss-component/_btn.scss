@@ -1,0 +1,66 @@
+.btn{
+  display:inline-block;
+  box-sizing:border-box;
+  vertical-align:middle;
+  border:none;
+  font-weight:bold;
+  outline:none;
+  font-size:14px;
+  text-align:center;
+  line-height:1.5em;
+  padding:5px 10px;
+  -webkit-user-select:none;
+  user-select:none;
+  @at-root .pc &{
+    cursor:pointer;
+  }
+
+  @mixin btn-color($color){
+    $hoverColor:lighten($color,10);
+    $activeColor:darken($color,10);
+    background:$color;
+    color:white;
+    @at-root .pc &:hover{
+      background:$hoverColor;
+    }
+    &:active,&:focus{
+      background:$activeColor;
+    }
+
+    &.btn-clear{
+      background:transparent;
+      color:$color;
+      @at-root .pc &:hover{
+        background:transparent;
+        color:$hoverColor;
+      }
+      &:active,&:focus{
+        color:$activeColor;
+      }
+    }
+  }
+
+  &,&.btn-success{
+    @include btn-color(#49E2CC);
+  }
+  &.btn-origin{
+    @include btn-color(#EB6437)
+  }
+
+  &.btn-disabled{
+    @at-root .pc &{
+      cursor:not-allowed!important;
+    }
+    background:grey!important;
+    color:lightgrey!important;
+    &.btn-clear{
+      background:transparent!important;
+    }
+  }
+  &.btn-full{
+    width:100%;
+  }
+  &.btn-round{
+    border-radius: 5px;
+  }
+}

@@ -1,0 +1,250 @@
+@import "../ignore/nav.pad";
+@import "../ignore/index-icon.pad";
+@import "../var";
+
+div,span{
+  line-height:1em;
+}
+
+.customized-btn{
+  font-size:0.625rem;
+  height:1.4rem;
+  line-height:1.4rem;
+  width:5.625rem;
+  background:#f1ca9d;
+  color:#877666;
+  border:none;
+  border-radius:3px;
+  outline: none;
+  cursor:pointer;
+  -moz-transition:background 300ms ease-in-out,color 300ms ease-in-out;
+  -webkit-transition:background 300ms ease-in-out,color 300ms ease-in-out;
+  transition:background 300ms ease-in-out,color 300ms ease-in-out;
+}
+
+
+body>.container>section{
+  height:18.75rem;
+  position:relative;
+  overflow:hidden;
+  background-color:#f4f4f4;
+
+  &.show{
+    background:url("#{$qiniuHost}/elisali/home/img/show.pad.jpg") center no-repeat;
+    background-size:cover;
+    height:20rem;
+  }
+  &.show>.action{
+    position:absolute;
+    right:0.625rem;
+    bottom:5.625rem;
+    text-align:center;
+    color:white;
+    &>.th-0{
+      font-size:1.875rem;
+      margin-bottom:0.625rem;
+    }
+    &>.th-1{
+      font-size:1.875rem;
+      margin-bottom:1rem;
+    }
+  }
+
+  &.story {
+    background: url("#{$qiniuHost}/elisali/home/img/story.pad.jpg") center bottom no-repeat;
+    background-size:cover;
+    text-align: center;
+    div {
+      padding-bottom: 0.47rem;
+      font-size: 0.625rem;
+      color: #877666;
+    }
+    div:first-child {
+      font-size: 1.56rem;
+      padding: 2.25rem 0 0.94rem;
+    }
+    .br {
+      color: #c54c49;
+    }
+  }
+
+  &.adv{
+    background:url("#{$qiniuHost}/elisali/home/img/advantage.pad.jpg") center no-repeat;
+    background-size:cover;
+  }
+  &.adv>div{
+    text-align:center;
+    padding:0.16rem 0;
+    font-size:0.625rem;
+    color:#877666;
+    &:first-child{font-size:1.56rem;padding-top:2.25rem;}
+    &.box{
+      padding:1.97rem 0.625rem 0;
+      -moz-box-pack:justify;
+      -webkit-box-pack: justify;
+      -webkit-justify-content: space-around;
+      justify-content: space-around;
+      &>div{
+        color:#f1ca9d;
+        font-size:0.94rem;
+        &>div{padding-bottom:0.31rem;}
+        .small{
+          line-height:0.625rem;
+          font-size:0.5rem;
+        }
+        .index-icon{display:block;margin:1.25rem auto 0.47rem;padding-bottom:0;}
+      }
+    }
+  }
+  &.cus {
+    background-size:cover;
+    text-align:center;
+    .customized-btn{
+      width:8.125rem;
+    }
+    &> div {
+      padding: 0.16rem 0;
+      font-size: 0.625rem;
+      color:#877666;
+      &:first-child {
+        font-size: 1.56rem;
+        padding-top: 2.25rem;
+      }
+      &.box {
+        font-size:0.625rem;
+        line-height:1em;
+        padding:1.25rem 0.625rem 1.56rem;
+        -moz-box-pack:justify;
+        -webkit-box-pack:justify;
+        -webkit-justify-content: space-around;
+        justify-content: space-around;
+        &>div{width:3.75rem;}
+      }
+    }
+  }
+
+  &.case{
+    width:100%;
+    overflow:hidden;
+    position:relative;
+    .c1{background:url("#{$qiniuHost}/elisali/home/img/c1.pad.jpg") no-repeat center;background-size:cover;}
+    .c2{background:url("#{$qiniuHost}/elisali/home/img/c2.pad.jpg") no-repeat center;background-size:cover;}
+    .c3{background:url("#{$qiniuHost}/elisali/home/img/c3.pad.jpg") no-repeat center;background-size:cover;}
+    .c4{background:url("#{$qiniuHost}/elisali/home/img/c4.pad.jpg") no-repeat center;background-size:cover;}
+    .swiper-slide{
+      text-align:center;
+      color:white;
+      .title{font-size:1.56rem;padding-top:2.19rem;}
+      .subtitle{font-size:0.94rem;padding-top:0.31rem;}
+    }
+    .swiper-pagination-bullet{background:#857766!important;opacity:1!important;width:0.625rem;height:0.625rem;}
+    .swiper-pagination-bullet-active{background:#F0CB9E!important;}
+  }
+  &.map{
+    text-align:center;
+    height:auto;
+    margin-top:20px;
+    padding:20px 0;
+    background:#0E1A1D!important;
+    .logo>img{height:40px;}
+    .copyright{border-left:2px solid #f1ca9d;}
+    &>div{
+      display:inline-block;
+      vertical-align:middle;
+      font-size:12px;
+      color:#f1ca9d;
+      text-align:left;
+      &>div{line-height:1em;&:first-child{padding-bottom:8px;}}
+    }
+  }
+}
+
+body>.dz .container{
+  position: relative;
+  background: white;
+  padding:0.625rem;
+  &>.side{
+    width:7.81rem;
+    img{width:100%;}
+    display:inline-block;
+    vertical-align:middle;
+    margin-right:0.56rem;
+  }
+  &>.main {
+    $m: 0.15625rem; //input margin
+
+    display:inline-block;
+    vertical-align:middle;
+    width: 12.5rem;
+    font-size: 0.5rem;
+    input,textarea{
+      -webkit-appearance: none;
+    }
+    input, textarea, .b {
+      padding: 0.1875rem;
+      margin: $m;
+      border: 1px solid #e2e2e2;
+      color: #877666;
+      border-radius: 0.125rem;
+    }
+    input::-webkit-input-placeholder, textarea::-webkit-input-placeholder {
+      color: #ccc;
+    }
+    input::-moz-placeholder, textarea::-moz-placeholder {
+      color: #ccc;
+    }
+    input:-ms-input-placeholder, textarea:-ms-input-placeholder {
+      color: #ccc;
+    }
+    input.libPlaceHolder, textarea.libPlaceHolder {
+      color: #ccc !important;
+    }
+    textarea{
+      resize: none;
+      height: 3em;
+      overflow: auto;
+      margin-top:0.625rem;
+    }
+    .b {
+      background: #e2e2e2;
+      border-color: #e2e2e2;
+      cursor: pointer;
+      text-align: center;
+      -moz-transition: background 300ms ease-in-out, color 300ms ease-in-out;
+      -webkit-transition: background 300ms ease-in-out, color 300ms ease-in-out;
+      transition: background 300ms ease-in-out, color 300ms ease-in-out;
+    }
+    .b:hover {
+      border-color: #f1ca9d;
+      background: #f1ca9d;
+      color: #877666;
+    }
+
+    .customized-btn{
+      margin-left:$m;
+      margin-top:0.625rem;
+      width:5.5rem;
+    }
+    .tel{
+      color:#F0CB9E;
+      font-size:0.625rem;
+      &>span{
+        display:inline-block;
+        vertical-align:middle;
+      }
+    }
+
+    .error {
+      border-color: red;
+    }
+  }
+  .close{
+    position:absolute;
+    top: 0.47rem;
+    right:0.47rem;
+    width:0.78rem;
+    height:0.78rem;
+    cursor:pointer;
+    background:url("/resource/home/img/close.png") center no-repeat;
+  }
+}

@@ -1,0 +1,329 @@
+@import "../ignore/nav.pc";
+@import "../ignore/index-icon.pc";
+@import "../var";
+
+div,span{
+  line-height:1em;
+}
+body{
+  background:#f4f4f4;
+  .logo>img{
+    display:block;
+    height:40px;
+  }
+}
+
+.customized-btn{
+  font-size:20px;
+  height:46px;
+  line-height:46px;
+  width:180px;
+  background:#f1ca9d;
+  color:#877666;
+  border:none;
+  border-radius:3px;
+  outline: none;
+  cursor:pointer;
+  -moz-transition:background 300ms ease-in-out,color 300ms ease-in-out;
+  -webkit-transition:background 300ms ease-in-out,color 300ms ease-in-out;
+  transition:background 300ms ease-in-out,color 300ms ease-in-out;
+  &:hover{
+    background:darken(#f1ca9d,5);
+  }
+}
+
+
+body>.container>section{
+  height:600px;
+  position:relative;
+  overflow:hidden;
+  background-color:#f4f4f4!important;
+
+  //@at-root .pad &.show{height:640px;}
+
+  &>.bg{
+    width:100%;
+    height:800px;
+    //@at-root .pad &{height:100%;}
+    position:absolute;
+    left:0;
+    top:0;
+    -moz-transform:translate(0,0);
+    -webkit-transform:translate(0,0);
+    transform:translate(0 0);
+    background:center no-repeat;
+  }
+  &>.content{
+    position:relative;
+    z-index:10;
+    height:100%;
+  }
+
+  &.show>.bg{
+    background-image:url("#{$qiniuHost}/elisali/home/img/show.pc.jpg");
+  }
+  &.show>.content>.action{
+    position:absolute;
+    right:0;
+    /*@at-root .pad &{
+      right:20px;
+    }*/
+    bottom:180px;
+    text-align:center;
+    color:white;
+    &>.th-0{
+      font-size:60px;
+      margin-bottom:20px;
+    }
+    &>.th-1{
+      font-size:60px;
+      margin-bottom:32px;
+    }
+  }
+
+  &.story{
+    background:background url("#{$qiniuHost}/elisali/home/img/story.pc.jpg") center bottom no-repeat;
+    &>.content{
+      text-align:center;
+      div{
+        padding-bottom:15px;
+        font-size:20px;
+        color:#877666;
+      }
+      div:first-child{
+        font-size:50px;
+        padding:72px 0 30px;
+      }
+      .br{
+        color:#c54c49;
+      }
+    }
+  }
+
+  &.adv>.bg{
+    background-image:url("#{$qiniuHost}/elisali/home/img/advantage.pc.jpg");
+  }
+  &.adv>.content>div{
+    text-align:center;
+    padding:5px 0;
+    font-size:20px;
+    color:#877666;
+    &:first-child{font-size:50px;padding-top:72px;}
+    &.box{
+      padding-top:63px;
+      &>div{
+        display:inline-block;
+        vertical-align: middle;
+        margin:0 50px;
+        color:#f1ca9d;
+        padding-bottom:10px;
+        font-size:30px;
+        &>div{padding-bottom:10px;}
+        .small{
+          line-height:20px;
+          font-size:16px;
+        }
+        .index-icon{display:block;margin:40px auto 15px;padding-bottom:0;}
+      }
+    }
+  }
+  &.cus {
+    text-align:center;
+    .customized-btn{
+      width:260px;
+    }
+    &>.content > div {
+      padding: 5px 0;
+      font-size: 20px;
+      color:#877666;
+      &:first-child {
+        font-size: 50px;
+        padding-top: 72px;
+      }
+      &.box {
+        padding-top: 40px;
+        font-size:20px;
+        line-height:1em;
+        padding-bottom:50px;
+        &>div{
+          display:inline-block;
+          vertical-align:middle;
+          width:200px;
+        }
+      }
+    }
+  }
+
+  &.case{
+    &>.c{
+      position:absolute;
+      width:100%;
+      height:100%;
+      left:0;
+      top:0;
+      @at-root .ie8 &{
+        filter:alpha(opacity=0);
+      }
+      opacity:0;
+      &.active{
+        opacity:1;
+        @at-root .ie8 & {
+          filter: alpha(opacity=100)
+        }
+      }
+
+      text-align:center;
+      color:white;
+      .title{
+        font-size:50px;
+        padding-top:70px;
+      }
+      .desc{
+        font-size:30px;
+        padding-top:10px;
+      }
+
+      -moz-transition:opacity 300ms ease-in-out;
+      -webkit-transition:opacity 300ms ease-in-out;
+      transition:opacity 300ms ease-in-out;
+      background:center no-repeat;
+    }
+    .c1{background:url("#{$qiniuHost}/elisali/home/img/c1.pc.jpg") no-repeat center}
+    .c2{background:url("#{$qiniuHost}/elisali/home/img/c2.pc.jpg") no-repeat center}
+    .c3{background:url("#{$qiniuHost}/elisali/home/img/c3.pc.jpg") no-repeat center}
+    .c4{background:url("#{$qiniuHost}/elisali/home/img/c4.pc.jpg") no-repeat center}
+    &>.op{
+      position:absolute;
+      width:100%;
+      height:20px;
+      left:0;
+      bottom:30px;
+      text-align:center;
+      &>span{
+        display:inline-block;
+        width:20px;
+        height:20px;
+        margin:0 10px;
+        border-radius:10px;
+        cursor:pointer;
+        background:#877666;
+        &.active,&:hover {
+          background:#f1ca9d;
+        }
+      }
+    }
+  }
+  &.map{
+    text-align:center;
+    height:auto;
+    margin-top:20px;
+    padding:20px 0;
+    background:#0E1A1D!important;
+    &>.content>div{
+      display:inline-block;
+      vertical-align:middle;
+      font-size:12px;
+      color:#f1ca9d;
+      text-align:left;
+      &>div{line-height:1em;&:first-child{padding-bottom:8px;}}
+    }
+  }
+}
+
+body>.dz .container{
+  position: relative;
+  background: white;
+  padding:20px;
+  &>.side{
+    width:250px;
+    img{width:100%;}
+    display:inline-block;
+    vertical-align:middle;
+    margin-right:18px;
+  }
+  &>.main {
+    $width:400px;//input区域宽度
+    $m: 5px; //input margin
+    $p: 6px; //input padding
+    $b: 1px; //input border
+
+    display:inline-block;
+    vertical-align:middle;
+    width: $width;
+    font-size: 16px;
+    input, textarea, .b {
+      padding: $p;
+      margin: $m;
+      border: $b solid #e2e2e2;
+      color: #877666;
+      border-radius: 4px;
+    }
+    input::-webkit-input-placeholder, textarea::-webkit-input-placeholder {
+      color: #ccc;
+    }
+    input::-moz-placeholder, textarea::-moz-placeholder {
+      color: #ccc;
+    }
+    input:-ms-input-placeholder, textarea:-ms-input-placeholder {
+      color: #ccc;
+    }
+    input.libPlaceHolder, textarea.libPlaceHolder {
+      color: #ccc !important;
+    }
+
+    input, .b {
+      width: $width/2 - $m * 2 - $b * 2 - $p * 2;
+    }
+    .f,textarea {
+      width: $width - $m * 2 - $b * 2 - $p * 2;
+    }
+    textarea{
+      resize: none;
+      height: 3em;
+      overflow: auto;
+      margin-top:20px;
+    }
+    .b {
+      background: #e2e2e2;
+      border-color: #e2e2e2;
+      cursor: pointer;
+      text-align: center;
+      -moz-transition: background 300ms ease-in-out, color 300ms ease-in-out;
+      -webkit-transition: background 300ms ease-in-out, color 300ms ease-in-out;
+      transition: background 300ms ease-in-out, color 300ms ease-in-out;
+    }
+    .b:hover {
+      border-color: #f1ca9d;
+      background: #f1ca9d;
+      color: #877666;
+    }
+
+    .customized-btn{
+      margin-left:$m;
+      margin-top:20px;
+      width:$width/2 - $m * 2 - $b * 2 - $p * 2 - 10px;
+    }
+
+    .tel{
+      color:#F0CB9E;
+      font-size:20px;
+      &>span{
+        display:inline-block;
+        vertical-align:middle;
+      }
+    }
+
+    .error {
+      border-color: red;
+    }
+  }
+  .close{
+    position:absolute;
+    top: 15px;
+    right:15px;
+    width:25px;
+    height:25px;
+    cursor:pointer;
+    background:url("/resource/home/img/close.png") center no-repeat;
+  }
+}

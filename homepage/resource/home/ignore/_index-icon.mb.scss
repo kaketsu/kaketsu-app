@@ -1,0 +1,82 @@
+
+
+.index-icon{
+  background:url("/resource/home/img/icon.mb.svg") no-repeat;//1440*900
+  &:before{
+    display:block;
+    content:'';
+    width:100%;
+  }
+
+  &.op{background-size:1548.4% 1058.8%;&:before{padding-top:91.4%;}}
+  &.op.menu{ // 93:85  原始: 93.2*85.1
+    background-position:50% bottom;
+  }
+  &.op.close{ // 93:85 原始:85.1*85.1
+    background-position:59.95% bottom;
+  }
+  &.op.back{ // 93:85   原始: 49.9*85.1
+    background-position:68.5% bottom;
+  }
+
+  &.right{ //1:1   原始:80.7*80.7
+    background-size:1784.4% 1115.2%;
+    &:before{padding-top:100%;}
+    background-position:82.1% bottom;
+  }
+
+  &.phone{ //1:1   原始:172.3*172.3
+    background-size:835.77% 522.3%;
+    &:before{padding-top:100%;}
+    background-position:right bottom;
+  }
+
+  &.six-edge{ //551:610   原始:551.15*609.7
+    background-size:259.57% 146.6%;
+    &:before{padding-top:110.6%;}
+    background-position:top right;
+  }
+
+
+  &.adv{background-size:878%;&:before{padding-top:114.63%;}}
+  &.adv.sp{//164:188   原始:150.2*188.1
+    background-position:-0.5% bottom;
+  }
+  &.adv.rg{//164:188   原始:158.5*182
+    background-position:13.5% bottom;
+  }
+  &.adv.sv{//164:188   原始:163.4*180.2
+    background-position:27.6% bottom;
+  }
+
+  &.cus{background-size:742.27% 478.7%;&:before{padding-top:96.9%;}}
+  &.cus.ask{//194*188   原始:188.5*188.1
+    background-position:-0.1% 0;
+  }
+  &.cus.case{//194*188    原始:187.7*185.1
+    background-position:-0.1% 35.2%;
+  }
+  &.cus.dj { //194*188    原始:?*184.1
+    background-position: 40.2% 35.3%
+  }
+  &.cus.ca{//194*188    原始:190.3*187.7
+    background-position:20.1% 0;
+  }
+  &.cus.fc{//194*188    原始:188.5*184.1
+    background-position:20.1% 35.3%;
+  }
+  &.cus.tr{//194*188    原始:193.6*183.2
+    background-position: 40.4% 0;
+  }
+
+  &.weix{// 956*432
+    background:url("/resource/home/img/icon-addition.mb.svg") no-repeat left top; //536.27*433.38
+    background-size:178.27% 99.68%;
+    &:before{padding-top:80.81%;}
+  }
+  &.call{
+    background:url("/resource/home/img/icon-addition.mb.svg") no-repeat right top; //394.64*415.86
+    background-size:242.25% 103.88%;
+    &:before{padding-top:105.38%;}
+  }
+}

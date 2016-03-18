@@ -1,0 +1,54 @@
+@import "../var";
+
+img{width:100%;vertical-align:top;}
+
+body{
+  background:#252638 url("#{$qiniuHost}/elisali/activity/20160316/img/bg.v2.jpg-phone") top left no-repeat;
+  background-size:100%;
+}
+
+body>.list{
+  &>div{margin:0.4rem;}
+}
+
+header>div{
+  &:first-child{margin:1.3rem 5.6rem 0.5rem;}
+  &:last-child{margin:0 0.5rem 2rem;}
+}
+
+footer{
+  color:#F6D0A0;
+  margin-top:2rem;
+  text-align:center;
+  font-size:0.6rem;
+  .info{
+    padding:2rem 0 0.8rem;
+    display:inline-block;
+    .flex{
+      -moz-box-pack:justify;
+      -webkit-box-pack:justify;
+      -webkit-justify-content:space-between;
+      justify-content:space-between;
+      &>div:first-child{width:4rem;padding:0.2rem;background:white;}
+      &>div:last-child{
+        text-align:center;
+        &>:first-child{width:3.36rem;margin-bottom:0.3rem;display:inline-block;}
+      }
+      margin-bottom:0.64rem;
+    }
+    .r{ color:#B3181D }
+  }
+  padding-bottom:1.8rem;
+  .x-btn{
+    position:fixed;
+    bottom:0;
+    left:0;
+    right:0;
+    height:1.8rem;
+    line-height:1.8rem;
+    font-size:0.8rem;
+    display:block;
+    background:#252638;
+    border-top:1px solid #383746;
+  }
+}

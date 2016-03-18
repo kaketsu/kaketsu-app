@@ -1,0 +1,286 @@
+@import "../ignore/index-icon.mb";
+@import "../var";
+
+body>header{
+  position:fixed;
+  width:100%;
+  top:0;
+  left:0;
+  padding:5px 0;
+  text-align:center;
+  background:#272829;
+  z-index:1001;
+  img{
+    height:35px;
+  }
+  span{
+    position:absolute;
+    display:block;
+    left:10px;
+    top:10px;
+    width:30px;
+  }
+  @at-root .weix &{display:none;}
+}
+
+body>section.content{
+  padding-top:45px;
+  @at-root .weix &{padding-top:0;}
+  background:white;
+
+  @at-root {
+    %title {
+      font-size: 1.5rem;
+      line-height: 1em;
+      padding-top: 1.8rem;
+      padding-bottom: 0.3rem;
+      color: #867769;
+      text-align: center;
+    }
+
+    %subtitle {
+      font-size: 0.84rem;
+      line-height: 1em;
+      text-align: center;
+      color: #857666;
+    }
+
+    %body {
+      font-size: 0.6rem;
+      line-height: 0.9rem;
+      padding-top: 1.08rem;
+    }
+  }
+
+  &>.show{
+    height:12.45rem;
+    background:url("#{$qiniuHost}/elisali/home/img/show.mb.jpg-phone") no-repeat center;
+    background-size:100%;
+    text-align:center;
+    .title,.sub-title{
+      color:white;
+    }
+    .title{
+      font-size:3rem;
+      line-height:1em;
+      padding-bottom:0.2rem;
+      padding-top:2.4rem;
+    }
+    .sub-title{
+      font-size:1.88rem;
+      line-height:1em;
+      padding-bottom:1.2rem;
+    }
+    .btn{
+      background:#f1ca9d;
+      color:#857666;
+      border-radius:3px;
+      outline:none;
+      width:13.2rem;
+      border:none;
+      font-size:0.72rem;
+      font-weight:normal;
+      line-height:1.8em;
+    }
+  }
+  &>.story{
+    padding:0 0.9rem;
+    background:url("#{$qiniuHost}/elisali/home/img/story.mb.jpg-phone") no-repeat bottom;
+    background-size:100%;
+    .title{ @extend %title; }
+    .body{
+      @extend %body;
+      text-align:center;
+      color:#877662;
+      .r{
+        color:#C24D49;
+      }
+      padding-bottom:6rem;
+    }
+  }
+  &>.adv{
+    height:19rem;
+    background:url("#{$qiniuHost}/elisali/home/img/advantage.mb.jpg-phone") no-repeat;
+    background-size:100%;
+    .title{@extend %title;}
+    .subtitle{@extend %subtitle;}
+    .body{
+      @extend %body;
+      -moz-box-pack:justify;
+      -webkit-box-pack:justify;
+      -webkit-justify-content: space-around;
+      justify-content: space-around;
+      &>.box {
+        text-align:center;
+        color:#A8A095;
+        width:4.32rem;
+        &>div{width:4.16rem;display:inline-block;margin:auto;}
+        font-size:0.48rem;
+        .r{
+          color:#AF171D;
+          display:block;
+          width:auto;
+          font-size:0.60rem;
+          padding-top:0.12rem;
+        }
+        .six-edge{
+          width:3rem;display:inline-block;position:relative;
+          &>.adv{position:absolute;width:1.8rem;left:0.6rem;top:0.42rem;}
+        }
+      }
+    }
+  }
+  &>.cus{
+    .title{@extend %title;}
+    .subtitle{@extend %subtitle;}
+    .body{
+      @extend %body;
+      font-size:0.7rem;
+      padding-left:4rem;
+      &>.item>div{color:#A59F93;display:inline-block;vertical-align:middle;&.cus{width:1.5rem;margin-right:0.9rem;}}
+      &>.round{
+        padding-left:0.69rem;
+        margin:0.24rem 0;
+        &:before,&:after{
+          content:"";
+          margin:0.12rem 0;
+          display:block;
+          width:0.12rem;
+          height:0.12rem;
+          background:#B2141D;
+          border-radius:0.06rem;
+        }
+      }
+    }
+    .btn{
+      background: #f1ca9d;
+      color: #857666;
+      border-radius: 3px;
+      outline: none;
+      width: 13.2rem;
+      border: none;
+      font-size: 0.72rem;
+      font-weight: normal;
+      line-height: 1.8em;
+      margin:1.2rem 0.9rem 1.8rem;
+    }
+  }
+  &>.case{
+    position:relative;
+    overflow:hidden;
+    .swiper-slide {
+      height: 12.4rem;
+      &.c1 {
+        background: url("#{$qiniuHost}/elisali/home/img/c1.mb.jpg-phone") no-repeat;
+        background-size:100%;
+      }
+      &.c2 {
+        background: url("#{$qiniuHost}/elisali/home/img/c2.mb.jpg-phone") no-repeat;
+        background-size:100%;
+      }
+      &.c3 {
+        background: url("#{$qiniuHost}/elisali/home/img/c3.mb.jpg-phone") no-repeat;
+        background-size:100%;
+      }
+      &.c4 {
+        background: url("#{$qiniuHost}/elisali/home/img/c4.mb.jpg-phone") no-repeat;
+        background-size:100%;
+      }
+      &>.title{@extend %title;color:white;}
+      &>.subtitle{@extend %subtitle;color:white;}
+    }
+    .swiper-pagination-bullet{
+      background:#857766!important;
+      opacity: 1!important;
+    }
+    .swiper-pagination-bullet-active{
+      background:#F0CB9E!important;
+    }
+  }
+}
+
+body>footer{
+  margin-top:0.24rem;
+  background:#272829;
+  padding:15px 0 30px;
+  -webkit-box-pack:center;
+  -moz-box-pack:center;
+  -webkit-justify-content: center;
+  justify-content: center;
+  &>div:first-child{
+    img{width:70px;vertical-align: top}
+    padding:5px;
+    background:white;
+    margin-right:20px;
+  }
+  &>div:last-child{
+    text-align:left;
+    img{height:35px;}
+    color:#D5BB9A;
+    font-size:12px;
+    line-height:20px;
+  }
+}
+
+body>aside{
+  position:fixed;
+  z-index:1000;
+  box-sizing:border-box;
+  width:70%;
+  left:0;
+  background:#2F3031;
+  -webkit-transform:translate(-100%,0);
+  -moz-transform:translate(-100%,0);
+  transform:translate(-100%,0);
+  &.show{
+    -webkit-transform:translate(0,0);
+    -moz-transform:translate(0%,0);
+    transform:translate(0%,0);
+
+    -moz-transition:-moz-transform ease-out 300ms;
+    -webkit-transition:-webkit-transform ease-out 300ms;
+    transition:transform ease-out 300ms;
+  }
+  -moz-transition:-moz-transform ease-in 300ms;
+  -webkit-transition:-webkit-transform ease-in 300ms;
+  transition:transform ease-in 300ms;
+
+  &.nav{
+    top:45px;
+    height:105%;
+    line-height:2em;
+    font-size:1rem;
+    padding:1.2rem 0 0 0.6rem;
+    color:#877566;
+    box-shadow:0 0 0 rgba(black,0.6);
+    &.show{box-shadow:0 0 75px rgba(black,0.6);}
+    &>.active{color:#FCD1A0;}
+  }
+  &.addition{
+    //width:100%;
+    bottom:0;
+    box-sizing:border-box;
+    padding:0 0 1.2rem 0.6rem;
+    line-height:2em;
+    color:#FCD1A0;
+    span{
+      display:inline-block;
+      vertical-align: middle;
+      @mixin icon ($width){
+        width:$width;
+        margin-right:1.5rem - $width;
+      }
+      &.weix{ @include icon(1rem);}
+      &.call{ @include icon(0.8rem);}
+    }
+  }
+}
+
+body>.phone{
+  display:block;
+  position:fixed;
+  width:2rem;
+  right:0;
+  bottom:55px;
+  z-index:1000;
+}
