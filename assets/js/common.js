@@ -223,9 +223,28 @@ var zouke = {};
 })();
 
 (function () {
+    var data = new WeakMap();
+    function tableClick(e) {
+        var action = e.target.dataset.action;
+        if (action) {
+            var id = e.target.dataset.id;
+            var d = data.get(e.currentTarget)[id];
+            d.action = action;
+            d.id = id;
+            e.currentTarget.trigger('table:op:' + action, d);
+            e.currentTarget.trigger('table:op', d);
+        }
+    }
     zouke.table = {
         getRender: function getRender(buttons) {
-            return function (data, type, rowData, meta) {
+            return function (_, type, rowData, meta) {
+
+                if (!data.has(meta.settings.nTable)) {
+                    data.set(meta.settings.nTable, {});
+                }
+                var d = data.get(meta.settings.nTable);
+                d[rowData[0]] = rowData;
+
                 if (type === 'display') {
                     var btn = '';
 
@@ -234,12 +253,14 @@ var zouke = {};
                     var _iteratorError3 = undefined;
 
                     try {
-                        for (var _iterator3 = (Array.isArray(buttons) ? buttons : buttons(data, type, rowData, meta))[Symbol.iterator](), _step3; !(_iteratorNormalCompletion3 = (_step3 = _iterator3.next()).done); _iteratorNormalCompletion3 = true) {
+                        for (var _iterator3 = (Array.isArray(buttons) ? buttons : buttons(_, type, rowData, meta))[Symbol.iterator](), _step3; !(_iteratorNormalCompletion3 = (_step3 = _iterator3.next()).done); _iteratorNormalCompletion3 = true) {
                             var _step3$value = _step3.value;
                             var name = _step3$value.name;
                             var cls = _step3$value.cls;
+                            var action = _step3$value.action;
+                            var permission = _step3$value.permission;
 
-                            btn += '\n    <a data-row="' + meta.row + '" data-id="' + rowData[0] + '" class="' + cls + '" href="#" title="' + name + '">\n    </a>';
+                            btn += '\n    <a data-row="' + ('row' in meta ? meta.row : 'auto') + '" ' + (permission ? 'data-permission="' + permission + '"' : '') + ' data-id="' + rowData[0] + '" data-action="' + action + '" class="' + cls + '" href="#" title="' + name + '">\n    </a>';
                         }
                     } catch (err) {
                         _didIteratorError3 = true;
@@ -261,56 +282,139 @@ var zouke = {};
                 return null;
             };
         },
+        getCheckBox: function getCheckBox() {
+            return function (_, type, rowData, meta) {
+                if (!data.has(meta.settings.nTable)) {
+                    data.set(meta.settings.nTable, {});
+                }
+                var cid = rowData[0];
+                var check = '<label>\n                            <input data-content="" type="checkbox" class="ace"  data-id="' + rowData[0] + '" ng-click="checkData($event,' + rowData[0] + ')" ng-checked="ids.indexOf(' + rowData[0] + ') != -1">\n                            <span class="lbl" >\n                            </span>\n                       </label>';
+                return check;
+            };
+        },
 
         defaultButtons: {
             get view() {
                 return {
                     name: '查看',
-                    cls: 'view blue ace-icon fa fa-search-plus bigger-130'
+                    cls: 'view blue ace-icon fa fa-search-plus bigger-130',
+                    action: 'view'
                 };
             },
             get edit() {
                 return {
                     name: '编辑',
-                    cls: 'edit green ace-icon fa fa-pencil bigger-130'
+                    cls: 'edit green ace-icon fa fa-pencil bigger-130',
+                    action: 'edit'
                 };
             },
             get clone() {
                 return {
                     name: '克隆',
-                    cls: 'clone ace-icon fa fa-copy bigger-130'
+                    cls: 'clone ace-icon fa fa-copy bigger-130',
+                    action: 'clone'
                 };
             },
             get remove() {
                 return {
                     name: '删除',
-                    cls: 'remove red act-icon fa fa-times bigger-130'
+                    cls: 'remove red act-icon fa fa-times bigger-130',
+                    action: 'remove'
                 };
             },
             get undo() {
                 return {
                     name: '恢复',
-                    cls: 'undo ace-icon fa fa-undo bigger-130'
+                    cls: 'undo ace-icon fa fa-undo bigger-130',
+                    action: 'undo'
                 };
             },
             get debit() {
                 return {
                     name: '催款',
-                    cls: 'debit ace-icon fa fa-money bigger-130'
+                    cls: 'debit ace-icon fa fa-money bigger-130',
+                    action: 'debit'
                 };
             },
             get book() {
                 return {
                     name: '预订',
-                    cls: 'book ace-icon fa fa-money bigger-130'
+                    cls: 'book ace-icon fa fa-money bigger-130',
+                    action: 'book'
                 };
             },
             get exp() {
                 return {
                     name: '导出',
-                    cls: 'exp ace-icon fa fa-sign-out bigger-130'
+                    cls: 'exp ace-icon fa fa-sign-out bigger-130',
+                    action: 'exp'
+                };
+            },
+            /******** for order start ********/
+            get pending() {
+                return {
+                    name: '待确认',
+                    cls: 'pending ace-icon fa fa-pencil bigger-130',
+                    action: 'pending'
+                };
+            },
+            get sending() {
+                return {
+                    name: '待发货',
+                    cls: 'sending ace-icon fa fa-pencil bigger-130',
+                    action: 'sending'
+                };
+            },
+            get error() {
+                return {
+                    name: '下单错误',
+                    cls: 'error ace-icon fa fa-pencil bigger-130',
+                    action: 'error'
+                };
+            },
+            get done() {
+                return {
+                    name: '已完成',
+                    cls: 'done ace-icon fa fa-pencil bigger-130',
+                    action: 'done'
+                };
+            },
+            get refunding() {
+                return {
+                    name: '待退款',
+                    cls: 'refunding ace-icon fa fa-pencil bigger-130',
+                    action: 'refunding'
+                };
+            },
+            get refunded() {
+                return {
+                    name: '已退款',
+                    cls: 'refunded ace-icon fa fa-search-plus bigger-130',
+                    action: 'refunded'
+                };
+            },
+            get crawl() {
+                return {
+                    name: '抓取',
+                    cls: 'crawl ace-icon fa fa-hand-grab-o bigger-130 ',
+                    action: 'crawl'
+                };
+            },
+            get online() {
+                return {
+                    name: '上线',
+                    cls: 'online ace-icon fa fa-arrow-up  bigger-130 ',
+                    action: 'online'
+                };
+            },
+            get offline() {
+                return {
+                    name: '下线',
+                    cls: 'online ace-icon fa fa-arrow-down  bigger-130 ',
+                    action: 'offline'
                 };
             }
+            /******** for order end ********/
         },
         selector: function selector(container) {
             return {
@@ -328,11 +432,95 @@ var zouke = {};
                     return this[cacheName];
                 }
             };
+        },
+        initEvent: function initEvent(table) {
+            table.on('click', tableClick);
+        },
+        highlight: function highlight(table, id) {
+            if (Array.isArray(id)) {
+                var templateTHList = table.$a('thead>tr>th');
+                var tr = document.createElement('tr');
+                tr.classList.add('high-row');
+                for (var i = 0; i < id.length; ++i) {
+                    var td = document.createElement('td');
+                    td.className = templateTHList[i].className.replace(/\s*sorting(\s*)?|(\s*)?sorting\s*/, ' ');
+
+                    tr.appendChild(td);
+                    if (i === id.length - 1 && (Array.isArray(id[i]) || typeof id[i] === 'function')) {
+                        //last && opt
+                        var rowData = [].concat(babelHelpers.toConsumableArray(id)).pop();
+                        td.innerHTML = this.getRender(id[i])(undefined, 'display', rowData, {
+                            settings: {
+                                nTable: table
+                            }
+                        });
+                    } else {
+                        td.innerHTML = id[i];
+                    }
+                }
+                var tbody = table.$('tbody');
+                if (tbody.firstElementChild) {
+                    tbody.insertBefore(tr, tbody.firstElementChild);
+                } else {
+                    tbody.appendChild(tr);
+                }
+            } else {
+                table.$('[data-id="' + id + '"]').closest('tr').classList.add('high-row');
+            }
         }
     };
 })();
 
 (function () {
+    var uploadFileWithSaveBaseInfoAsync = function () {
+        var ref = babelHelpers.asyncToGenerator(regeneratorRuntime.mark(function _callee3(token, cdn, file, name, pkey) {
+            var result, src, baseInfo, info;
+            return regeneratorRuntime.wrap(function _callee3$(_context3) {
+                while (1) {
+                    switch (_context3.prev = _context3.next) {
+                        case 0:
+                            _context3.next = 2;
+                            return uploadFileToQNAsync(token, file, name);
+
+                        case 2:
+                            result = _context3.sent;
+                            src = encodeURI(cdn + result.key);
+                            _context3.next = 6;
+                            return qiniu.getImageInfoAsync(src);
+
+                        case 6:
+                            baseInfo = _context3.sent;
+                            info = {
+                                pkey: pkey,
+                                type: 'f',
+                                name: file.name,
+                                width: baseInfo.width,
+                                height: baseInfo.height,
+                                size: (file.size / 1024).toFixed(2),
+                                src: src
+                            };
+                            _context3.next = 10;
+                            return zouke.resource.postAsync('/file/createfile', info);
+
+                        case 10:
+                            info.key = _context3.sent.key;
+
+                            delete info.pkey;
+
+                            return _context3.abrupt('return', info);
+
+                        case 13:
+                        case 'end':
+                            return _context3.stop();
+                    }
+                }
+            }, _callee3, this);
+        }));
+        return function uploadFileWithSaveBaseInfoAsync(_x2, _x3, _x4, _x5, _x6) {
+            return ref.apply(this, arguments);
+        };
+    }();
+
     Document.prototype.$ = Document.prototype.querySelector;
     Document.prototype.$a = Document.prototype.querySelectorAll;
     Element.prototype.$ = Element.prototype.querySelector;
@@ -346,7 +534,7 @@ var zouke = {};
     Node.prototype.trigger = function (type, data) {
         var e = type instanceof Event ? type : document.createDispatchEvent(type.toString());
         if (data) {
-            event.data = data;
+            e.$data = data;
         }
         this.dispatchEvent(e);
     };
@@ -420,96 +608,144 @@ var zouke = {};
         return urlComponents.join('&');
     }
 
-    function uploadFileToQNAsync(token, file, key) {
-        var formdata = new FormData();
-        formdata.append("key", key);
-        formdata.append("token", token);
-        formdata.append('file', file);
-
-        var xhr = new XMLHttpRequest();
-        xhr.open("POST", "http://upload.qiniu.com/");
-        //xhr.setRequestHeader("content-type","multipart/form-data");
-
-        xhr.timeout = 10000;
-
-        var promise = new Promise(function (r, j) {
-            xhr.onreadystatechange = function () {
-                if (xhr.readyState === 4) {
-
-                    if (this.status === 0) {
-                        //跨域无权限
-                        //同时会触发error事件
-                    } else {
-                            if (this.status === 200) {
-                                //成功
-
-                                r(JSON.parse(this.responseText));
-                            } else {
-                                j(this.status);
-                            }
-                        }
+    var qiniu = {
+        CHUNK_SIZE: 4 << 20, //4MB
+        _uploadChunk: function _uploadChunk(url, token, chunkBlob) {
+            return window.fetch(url, {
+                method: 'POST',
+                body: chunkBlob,
+                headers: {
+                    'Authorization': 'UpToken ' + token,
+                    'Content-Type': 'application/octet-stream'
                 }
-            };
-            xhr.onerror = function () {
-                j();
-            };
-            xhr.ontimeout = function () {
-                j("timeout");
-            };
-        });
+            }).then(function (res) {
+                return res.json();
+            });
+        },
+        uploadDirectAsync: function uploadDirectAsync(token, file, key) {
+            var formdata = new FormData();
+            formdata.append('key', key);
+            formdata.append('token', token);
+            formdata.append('file', file);
 
-        xhr.send(formdata);
-        return promise;
+            return window.fetch('http://upload.qiniu.com/', {
+                method: 'POST',
+                body: formdata
+            }).then(function (res) {
+                return res.json();
+            });
+        },
+        uploadByBlock: function uploadByBlock(token, file, key) {
+            var _this = this;
+
+            return babelHelpers.asyncToGenerator(regeneratorRuntime.mark(function _callee() {
+                var chunks, lastChunkSize, blockCtx, i, last, chunkBlob, encodeName;
+                return regeneratorRuntime.wrap(function _callee$(_context) {
+                    while (1) {
+                        switch (_context.prev = _context.next) {
+                            case 0:
+                                chunks = Math.ceil(file.size / _this.CHUNK_SIZE);
+                                lastChunkSize = file.size - _this.CHUNK_SIZE * (chunks - 1);
+                                blockCtx = [];
+                                i = 0;
+
+                            case 4:
+                                if (!(i < chunks)) {
+                                    _context.next = 15;
+                                    break;
+                                }
+
+                                last = i === chunks - 1; //最后一片
+
+                                chunkBlob = last ? file.slice(i * _this.CHUNK_SIZE) : file.slice(i * _this.CHUNK_SIZE, (i + 1) * _this.CHUNK_SIZE);
+                                _context.t0 = blockCtx;
+                                _context.next = 10;
+                                return _this._uploadChunk('http://upload.qiniu.com/mkblk/' + (last ? lastChunkSize : _this.CHUNK_SIZE) + '?name=' + key + '&chunk=' + i + '&chunks=' + chunks, token, chunkBlob);
+
+                            case 10:
+                                _context.t1 = _context.sent.ctx;
+
+                                _context.t0.push.call(_context.t0, _context.t1);
+
+                            case 12:
+                                ++i;
+                                _context.next = 4;
+                                break;
+
+                            case 15:
+                                encodeName = zouke.tools.URLSafeBase64Encode(key);
+                                _context.next = 18;
+                                return window.fetch('http://upload.qiniu.com/mkfile/' + file.size + '/key/' + encodeName + '/fname/' + encodeName, {
+                                    method: 'POST',
+                                    headers: {
+                                        'Authorization': 'UpToken ' + token,
+                                        'Content-Type': 'text/plain;charset=UTF-8'
+                                    },
+                                    body: blockCtx.join(',')
+                                });
+
+                            case 18:
+                                _context.next = 20;
+                                return _context.sent.json();
+
+                            case 20:
+                                return _context.abrupt('return', _context.sent);
+
+                            case 21:
+                            case 'end':
+                                return _context.stop();
+                        }
+                    }
+                }, _callee, _this);
+            }))();
+        },
+        getImageInfoAsync: function getImageInfoAsync(url) {
+            var _this2 = this;
+
+            return babelHelpers.asyncToGenerator(regeneratorRuntime.mark(function _callee2() {
+                var json;
+                return regeneratorRuntime.wrap(function _callee2$(_context2) {
+                    while (1) {
+                        switch (_context2.prev = _context2.next) {
+                            case 0:
+                                _context2.next = 2;
+                                return window.fetch(url + '?imageInfo');
+
+                            case 2:
+                                _context2.next = 4;
+                                return _context2.sent.json();
+
+                            case 4:
+                                json = _context2.sent;
+
+                                if (!json.code) {
+                                    _context2.next = 7;
+                                    break;
+                                }
+
+                                throw json.error;
+
+                            case 7:
+                                return _context2.abrupt('return', json);
+
+                            case 8:
+                            case 'end':
+                                return _context2.stop();
+                        }
+                    }
+                }, _callee2, _this2);
+            }))();
+        }
+    };
+
+    function uploadFileToQNAsync(token, file, key) {
+        if (file.size < qiniu.CHUNK_SIZE) {
+            return qiniu.uploadDirectAsync(token, file, key);
+        } else {
+            return qiniu.uploadByBlock(token, file, key);
+        }
     }
 
-    var uploadFileWithSaveBaseInfoAsync = function () {
-        var ref = babelHelpers.asyncToGenerator(regeneratorRuntime.mark(function _callee(token, cdn, file, name, pkey) {
-            var result, src, baseInfo, info;
-            return regeneratorRuntime.wrap(function _callee$(_context) {
-                while (1) {
-                    switch (_context.prev = _context.next) {
-                        case 0:
-                            _context.next = 2;
-                            return uploadFileToQNAsync(token, file, name);
-
-                        case 2:
-                            result = _context.sent;
-                            src = encodeURI(cdn + result.key);
-                            _context.next = 6;
-                            return zouke.resource.getImageInfoAsync(src);
-
-                        case 6:
-                            baseInfo = _context.sent;
-                            info = {
-                                pkey: pkey,
-                                type: 'f',
-                                name: file.name,
-                                width: baseInfo.width,
-                                height: baseInfo.height,
-                                size: (file.size / 1024).toFixed(2),
-                                src: src
-                            };
-                            _context.next = 10;
-                            return zouke.resource.postAsync('/file/createfile', info);
-
-                        case 10:
-                            info.key = _context.sent.key;
-
-                            delete info.pkey;
-
-                            return _context.abrupt('return', info);
-
-                        case 13:
-                        case 'end':
-                            return _context.stop();
-                    }
-                }
-            }, _callee, this);
-        }));
-        return function uploadFileWithSaveBaseInfoAsync(_x2, _x3, _x4, _x5, _x6) {
-            return ref.apply(this, arguments);
-        };
-    }();
 
     Object.assign(window.zouke, {
         net: {
@@ -523,66 +759,67 @@ var zouke = {};
 
                 var method = 'POST';
 
-                Object.assign(headers, {
+                var _headers = Object.assign({
                     "X-Requested-With": "XMLHttpRequest",
                     "credentials": 'same-origin',
                     "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8"
-                });
+                }, headers);
 
                 return window.fetch(url, {
                     method: method,
-                    headers: headers,
-                    body: formUrlEncode(data)
+                    headers: _headers,
+                    credentials: 'same-origin',
+                    body: _headers['Content-Type'].toLowerCase().includes('json') ? angular ? angular.toJson(data) : JSON.stringify(data) : formUrlEncode(data)
                 });
             },
             uploadFileAsync: function uploadFileAsync(file) {
-                var _this = this;
+                var _this3 = this;
 
                 var pkey = arguments.length <= 1 || arguments[1] === undefined ? '50000' : arguments[1];
-                return babelHelpers.asyncToGenerator(regeneratorRuntime.mark(function _callee2() {
+                return babelHelpers.asyncToGenerator(regeneratorRuntime.mark(function _callee4() {
                     var _ref2, token, cdn;
 
-                    return regeneratorRuntime.wrap(function _callee2$(_context2) {
+                    return regeneratorRuntime.wrap(function _callee4$(_context4) {
                         while (1) {
-                            switch (_context2.prev = _context2.next) {
+                            switch (_context4.prev = _context4.next) {
                                 case 0:
-                                    _context2.next = 2;
+                                    _context4.next = 2;
                                     return zouke.resource.postAsync('/utils/getToken2');
 
                                 case 2:
-                                    _ref2 = _context2.sent;
+                                    _ref2 = _context4.sent;
                                     token = _ref2.token;
                                     cdn = _ref2.cdn;
-                                    _context2.next = 7;
+                                    _context4.next = 7;
                                     return uploadFileWithSaveBaseInfoAsync(token, cdn, file, 'library/' + pkey + '/' + new Date().valueOf() + '_' + Math.round(Math.random() * 10000) + '_' + escape(file.name).replace(/-/g, '%2d'), pkey);
 
                                 case 7:
-                                    return _context2.abrupt('return', _context2.sent);
+                                    return _context4.abrupt('return', _context4.sent);
 
                                 case 8:
                                 case 'end':
-                                    return _context2.stop();
+                                    return _context4.stop();
                             }
                         }
-                    }, _callee2, _this);
+                    }, _callee4, _this3);
                 }))();
             },
             uploadFileListAsync: function uploadFileListAsync(files) {
-                var _this2 = this;
+                var _this4 = this;
 
                 var pkey = arguments.length <= 1 || arguments[1] === undefined ? '50000' : arguments[1];
-                return babelHelpers.asyncToGenerator(regeneratorRuntime.mark(function _callee3() {
+                return babelHelpers.asyncToGenerator(regeneratorRuntime.mark(function _callee5() {
                     var _ref3, token, cdn, timestrip, r, i;
 
-                    return regeneratorRuntime.wrap(function _callee3$(_context3) {
+                    return regeneratorRuntime.wrap(function _callee5$(_context5) {
                         while (1) {
-                            switch (_context3.prev = _context3.next) {
+                            switch (_context5.prev = _context5.next) {
                                 case 0:
-                                    _context3.next = 2;
+                                    _context5.next = 2;
                                     return zouke.resource.postAsync('/utils/getToken2');
 
                                 case 2:
-                                    _ref3 = _context3.sent;
+                                    _ref3 = _context5.sent;
                                     token = _ref3.token;
                                     cdn = _ref3.cdn;
                                     timestrip = new Date().valueOf();
@@ -591,61 +828,61 @@ var zouke = {};
 
                                 case 8:
                                     if (!(i < files.length)) {
-                                        _context3.next = 17;
+                                        _context5.next = 17;
                                         break;
                                     }
 
-                                    _context3.t0 = r;
-                                    _context3.next = 12;
+                                    _context5.t0 = r;
+                                    _context5.next = 12;
                                     return uploadFileWithSaveBaseInfoAsync(token, cdn, files[i], 'library/' + pkey + '/' + timestrip + '_' + Math.round(Math.random() * 10000) + '_' + escape(files[i].name).replace(/-/g, '%2d'), pkey).catch(function () {
                                         return {};
                                     });
 
                                 case 12:
-                                    _context3.t1 = _context3.sent;
+                                    _context5.t1 = _context5.sent;
 
-                                    _context3.t0.push.call(_context3.t0, _context3.t1);
+                                    _context5.t0.push.call(_context5.t0, _context5.t1);
 
                                 case 14:
                                     ++i;
-                                    _context3.next = 8;
+                                    _context5.next = 8;
                                     break;
 
                                 case 17:
-                                    return _context3.abrupt('return', r);
+                                    return _context5.abrupt('return', r);
 
                                 case 18:
                                 case 'end':
-                                    return _context3.stop();
+                                    return _context5.stop();
                             }
                         }
-                    }, _callee3, _this2);
+                    }, _callee5, _this4);
                 }))();
             }
         },
         resource: {
             postAsync: function postAsync(url, data) {
-                var _this3 = this;
+                var _this5 = this;
 
-                return babelHelpers.asyncToGenerator(regeneratorRuntime.mark(function _callee4() {
+                return babelHelpers.asyncToGenerator(regeneratorRuntime.mark(function _callee6() {
                     var response, json;
-                    return regeneratorRuntime.wrap(function _callee4$(_context4) {
+                    return regeneratorRuntime.wrap(function _callee6$(_context6) {
                         while (1) {
-                            switch (_context4.prev = _context4.next) {
+                            switch (_context6.prev = _context6.next) {
                                 case 0:
-                                    _context4.next = 2;
+                                    _context6.next = 2;
                                     return window.zouke.net.fetchAsync(url, { data: data });
 
                                 case 2:
-                                    response = _context4.sent;
-                                    _context4.next = 5;
+                                    response = _context6.sent;
+                                    _context6.next = 5;
                                     return response.json();
 
                                 case 5:
-                                    json = _context4.sent;
+                                    json = _context6.sent;
 
                                     if (!(json.code < 0)) {
-                                        _context4.next = 9;
+                                        _context6.next = 9;
                                         break;
                                     }
 
@@ -653,52 +890,160 @@ var zouke = {};
                                     throw json.code;
 
                                 case 9:
-                                    return _context4.abrupt('return', json);
+                                    return _context6.abrupt('return', json);
 
                                 case 10:
                                 case 'end':
-                                    return _context4.stop();
+                                    return _context6.stop();
                             }
                         }
-                    }, _callee4, _this3);
+                    }, _callee6, _this5);
                 }))();
             },
-            getImageInfoAsync: function getImageInfoAsync(url) {
-                var _this4 = this;
+            postJSONAsync: function postJSONAsync(url, data) {
+                var _this6 = this;
 
-                return babelHelpers.asyncToGenerator(regeneratorRuntime.mark(function _callee5() {
-                    var json;
-                    return regeneratorRuntime.wrap(function _callee5$(_context5) {
+                return babelHelpers.asyncToGenerator(regeneratorRuntime.mark(function _callee7() {
+                    var response, json;
+                    return regeneratorRuntime.wrap(function _callee7$(_context7) {
                         while (1) {
-                            switch (_context5.prev = _context5.next) {
+                            switch (_context7.prev = _context7.next) {
                                 case 0:
-                                    _context5.next = 2;
-                                    return window.fetch(url + '?imageInfo');
+                                    _context7.next = 2;
+                                    return window.zouke.net.fetchAsync(url, { data: data, headers: { "Content-Type": "application/JSON; charset=UTF-8" } });
 
                                 case 2:
-                                    _context5.next = 4;
-                                    return _context5.sent.json();
+                                    response = _context7.sent;
+                                    _context7.next = 5;
+                                    return response.json();
 
-                                case 4:
-                                    json = _context5.sent;
+                                case 5:
+                                    json = _context7.sent;
 
-                                    if (!json.code) {
-                                        _context5.next = 7;
+                                    if (!(json.code < 0)) {
+                                        _context7.next = 9;
                                         break;
                                     }
 
-                                    throw json.error;
+                                    alert(json.msg);
+                                    throw json.code;
 
-                                case 7:
-                                    return _context5.abrupt('return', json);
+                                case 9:
+                                    return _context7.abrupt('return', json);
 
-                                case 8:
+                                case 10:
                                 case 'end':
-                                    return _context5.stop();
+                                    return _context7.stop();
                             }
                         }
-                    }, _callee5, _this4);
+                    }, _callee7, _this6);
                 }))();
+            }
+        },
+        tools: {
+            utf8Encode: function utf8Encode(argString) {
+                if (argString === null || typeof argString === 'undefined') {
+                    return '';
+                }
+
+                var string = argString + ''; // .replace(/\r\n/g, '\n').replace(/\r/g, '\n');
+                var utftext = '',
+                    start,
+                    end,
+                    stringl = 0;
+
+                start = end = 0;
+                stringl = string.length;
+                for (var n = 0; n < stringl; n++) {
+                    var c1 = string.charCodeAt(n);
+                    var enc = null;
+
+                    if (c1 < 128) {
+                        end++;
+                    } else if (c1 > 127 && c1 < 2048) {
+                        enc = String.fromCharCode(c1 >> 6 | 192, c1 & 63 | 128);
+                    } else if (c1 & 0xF800 ^ 0xD800 > 0) {
+                        enc = String.fromCharCode(c1 >> 12 | 224, c1 >> 6 & 63 | 128, c1 & 63 | 128);
+                    } else {
+                        // surrogate pairs
+                        if (c1 & 0xFC00 ^ 0xD800 > 0) {
+                            throw new RangeError('Unmatched trail surrogate at ' + n);
+                        }
+                        var c2 = string.charCodeAt(++n);
+                        if (c2 & 0xFC00 ^ 0xDC00 > 0) {
+                            throw new RangeError('Unmatched lead surrogate at ' + (n - 1));
+                        }
+                        c1 = ((c1 & 0x3FF) << 10) + (c2 & 0x3FF) + 0x10000;
+                        enc = String.fromCharCode(c1 >> 18 | 240, c1 >> 12 & 63 | 128, c1 >> 6 & 63 | 128, c1 & 63 | 128);
+                    }
+                    if (enc !== null) {
+                        if (end > start) {
+                            utftext += string.slice(start, end);
+                        }
+                        utftext += enc;
+                        start = end = n + 1;
+                    }
+                }
+
+                if (end > start) {
+                    utftext += string.slice(start, stringl);
+                }
+
+                return utftext;
+            },
+            base64Encode: function base64Encode(data) {
+                var b64 = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=';
+                var o1,
+                    o2,
+                    o3,
+                    h1,
+                    h2,
+                    h3,
+                    h4,
+                    bits,
+                    i = 0,
+                    ac = 0,
+                    enc = '',
+                    tmp_arr = [];
+
+                if (!data) {
+                    return data;
+                }
+
+                data = this.utf8Encode(data + '');
+
+                do {
+                    // pack three octets into four hexets
+                    o1 = data.charCodeAt(i++);
+                    o2 = data.charCodeAt(i++);
+                    o3 = data.charCodeAt(i++);
+
+                    bits = o1 << 16 | o2 << 8 | o3;
+
+                    h1 = bits >> 18 & 0x3f;
+                    h2 = bits >> 12 & 0x3f;
+                    h3 = bits >> 6 & 0x3f;
+                    h4 = bits & 0x3f;
+
+                    // use hexets to index into b64, and append result to encoded string
+                    tmp_arr[ac++] = b64.charAt(h1) + b64.charAt(h2) + b64.charAt(h3) + b64.charAt(h4);
+                } while (i < data.length);
+
+                enc = tmp_arr.join('');
+
+                switch (data.length % 3) {
+                    case 1:
+                        enc = enc.slice(0, -2) + '==';
+                        break;
+                    case 2:
+                        enc = enc.slice(0, -1) + '=';
+                        break;
+                }
+
+                return enc;
+            },
+            URLSafeBase64Encode: function URLSafeBase64Encode(v) {
+                return this.base64Encode(v).replace(/\//g, '_').replace(/\+/g, '-');
             }
         },
         $: function $(cssSelect) {
@@ -781,6 +1126,103 @@ var zouke = {};
 })();
 
 (function () {
+    var freshAsync = function () {
+        var ref = babelHelpers.asyncToGenerator(regeneratorRuntime.mark(function _callee9(pv) {
+            var _iteratorNormalCompletion6, _didIteratorError6, _iteratorError6, _iterator6, _step6, info, index;
+
+            return regeneratorRuntime.wrap(function _callee9$(_context9) {
+                while (1) {
+                    switch (_context9.prev = _context9.next) {
+                        case 0:
+                            showLoading(pv);
+                            _context9.prev = 1;
+                            _context9.next = 4;
+                            return zouke.resource.postAsync('/file/getfolderInfo', { key: pv.pathKey.length > 0 ? pv.pathKey[pv.pathKey.length - 1] : pv.rootkey });
+
+                        case 4:
+                            pv.libraryItemInfos = _context9.sent.files;
+
+                        case 5:
+                            _context9.prev = 5;
+
+                            hideLoading(pv);
+                            return _context9.finish(5);
+
+                        case 8:
+                            if (pv.path.length > 0) {
+                                pv.libraryItemInfos.unshift({
+                                    key: pv.pathKey[pv.pathKey.length - 2] || pv.rootkey,
+                                    name: '上一级',
+                                    type: 'p'
+                                });
+                            }
+
+                            if (!(pv.chooseItemInfos.length > 0)) {
+                                _context9.next = 29;
+                                break;
+                            }
+
+                            _iteratorNormalCompletion6 = true;
+                            _didIteratorError6 = false;
+                            _iteratorError6 = undefined;
+                            _context9.prev = 13;
+
+                            for (_iterator6 = pv.libraryItemInfos[Symbol.iterator](); !(_iteratorNormalCompletion6 = (_step6 = _iterator6.next()).done); _iteratorNormalCompletion6 = true) {
+                                info = _step6.value;
+                                index = pv.chooseItemInfos.keyList.indexOf(info.key);
+
+                                if (index !== -1) {
+                                    pv.chooseItemInfos[index] = info;
+                                }
+                            }
+                            _context9.next = 21;
+                            break;
+
+                        case 17:
+                            _context9.prev = 17;
+                            _context9.t0 = _context9['catch'](13);
+                            _didIteratorError6 = true;
+                            _iteratorError6 = _context9.t0;
+
+                        case 21:
+                            _context9.prev = 21;
+                            _context9.prev = 22;
+
+                            if (!_iteratorNormalCompletion6 && _iterator6.return) {
+                                _iterator6.return();
+                            }
+
+                        case 24:
+                            _context9.prev = 24;
+
+                            if (!_didIteratorError6) {
+                                _context9.next = 27;
+                                break;
+                            }
+
+                            throw _iteratorError6;
+
+                        case 27:
+                            return _context9.finish(24);
+
+                        case 28:
+                            return _context9.finish(21);
+
+                        case 29:
+                            render(pv);
+
+                        case 30:
+                        case 'end':
+                            return _context9.stop();
+                    }
+                }
+            }, _callee9, this, [[1,, 5, 8], [13, 17, 21, 29], [22,, 24, 28]]);
+        }));
+        return function freshAsync(_x17) {
+            return ref.apply(this, arguments);
+        };
+    }();
+
     var pri = new WeakMap();
 
     var Item = function () {
@@ -823,6 +1265,7 @@ var zouke = {};
                 var name = v.name;
                 var rename = v.rename;
 
+
                 if (info) {
                     var url = info.type === 'f' ? info.src : 'http://7jpru6.com1.z0.glb.clouddn.com/Folder%20blue.png';
                     itemDom.style.display = '';
@@ -863,7 +1306,7 @@ var zouke = {};
         }, {
             key: 'renameAsync',
             value: function renameAsync() {
-                var r = undefined;
+                var r = void 0;
                 var p = new Promise(function (_r) {
                     r = _r;
                 });
@@ -872,6 +1315,7 @@ var zouke = {};
 
                 var name = _pri$get.name;
                 var rename = _pri$get.rename;
+
 
                 var oriName = this.info.name;
                 var key = this.info.key;
@@ -960,20 +1404,20 @@ var zouke = {};
         babelHelpers.createClass(ImageForm, [{
             key: 'showAsync',
             value: function () {
-                var ref = babelHelpers.asyncToGenerator(regeneratorRuntime.mark(function _callee6() {
+                var ref = babelHelpers.asyncToGenerator(regeneratorRuntime.mark(function _callee8() {
                     var initItemInfos = arguments.length <= 0 || arguments[0] === undefined ? [] : arguments[0];
                     var root = arguments.length <= 1 || arguments[1] === undefined ? '60001' : arguments[1];
 
                     var pv, _iteratorNormalCompletion5, _didIteratorError5, _iteratorError5, _iterator5, _step5, item;
 
-                    return regeneratorRuntime.wrap(function _callee6$(_context6) {
+                    return regeneratorRuntime.wrap(function _callee8$(_context8) {
                         while (1) {
-                            switch (_context6.prev = _context6.next) {
+                            switch (_context8.prev = _context8.next) {
                                 case 0:
                                     pv = pri.get(this);
 
                                     if (pv.isShow) {
-                                        _context6.next = 28;
+                                        _context8.next = 28;
                                         break;
                                     }
 
@@ -992,66 +1436,69 @@ var zouke = {};
                                     _iteratorNormalCompletion5 = true;
                                     _didIteratorError5 = false;
                                     _iteratorError5 = undefined;
-                                    _context6.prev = 8;
+                                    _context8.prev = 8;
                                     for (_iterator5 = initItemInfos[Symbol.iterator](); !(_iteratorNormalCompletion5 = (_step5 = _iterator5.next()).done); _iteratorNormalCompletion5 = true) {
                                         item = _step5.value;
 
                                         pv.chooseItemInfos.push(item);
                                         pv.chooseItemInfos.keyList.push(item.key);
                                     }
-                                    _context6.next = 16;
+                                    _context8.next = 16;
                                     break;
 
                                 case 12:
-                                    _context6.prev = 12;
-                                    _context6.t0 = _context6['catch'](8);
+                                    _context8.prev = 12;
+                                    _context8.t0 = _context8['catch'](8);
                                     _didIteratorError5 = true;
-                                    _iteratorError5 = _context6.t0;
+                                    _iteratorError5 = _context8.t0;
 
                                 case 16:
-                                    _context6.prev = 16;
-                                    _context6.prev = 17;
+                                    _context8.prev = 16;
+                                    _context8.prev = 17;
 
                                     if (!_iteratorNormalCompletion5 && _iterator5.return) {
                                         _iterator5.return();
                                     }
 
                                 case 19:
-                                    _context6.prev = 19;
+                                    _context8.prev = 19;
 
                                     if (!_didIteratorError5) {
-                                        _context6.next = 22;
+                                        _context8.next = 22;
                                         break;
                                     }
 
                                     throw _iteratorError5;
 
                                 case 22:
-                                    return _context6.finish(19);
+                                    return _context8.finish(19);
 
                                 case 23:
-                                    return _context6.finish(16);
+                                    return _context8.finish(16);
 
                                 case 24:
                                     pv.rootkey = root;
-                                    _context6.next = 27;
+                                    _context8.next = 27;
                                     return freshAsync(pv);
 
                                 case 27:
-                                    return _context6.abrupt('return', new Promise(function (r) {
+                                    return _context8.abrupt('return', new Promise(function (r) {
                                         pv.r = r;
                                     }));
 
                                 case 28:
                                 case 'end':
-                                    return _context6.stop();
+                                    return _context8.stop();
                             }
                         }
-                    }, _callee6, this, [[8, 12, 16, 24], [17,, 19, 23]]);
+                    }, _callee8, this, [[8, 12, 16, 24], [17,, 19, 23]]);
                 }));
-                return function showAsync(_x13, _x14) {
+
+                function showAsync(_x13, _x14) {
                     return ref.apply(this, arguments);
-                };
+                }
+
+                return showAsync;
             }()
         }, {
             key: 'isShow',
@@ -1060,103 +1507,6 @@ var zouke = {};
             }
         }]);
         return ImageForm;
-    }();
-
-    var freshAsync = function () {
-        var ref = babelHelpers.asyncToGenerator(regeneratorRuntime.mark(function _callee7(pv) {
-            var _iteratorNormalCompletion6, _didIteratorError6, _iteratorError6, _iterator6, _step6, info, index;
-
-            return regeneratorRuntime.wrap(function _callee7$(_context7) {
-                while (1) {
-                    switch (_context7.prev = _context7.next) {
-                        case 0:
-                            showLoading(pv);
-                            _context7.prev = 1;
-                            _context7.next = 4;
-                            return zouke.resource.postAsync('/file/getfolderInfo', { key: pv.pathKey.length > 0 ? pv.pathKey[pv.pathKey.length - 1] : pv.rootkey });
-
-                        case 4:
-                            pv.libraryItemInfos = _context7.sent.files;
-
-                        case 5:
-                            _context7.prev = 5;
-
-                            hideLoading(pv);
-                            return _context7.finish(5);
-
-                        case 8:
-                            if (pv.path.length > 0) {
-                                pv.libraryItemInfos.unshift({
-                                    key: pv.pathKey[pv.pathKey.length - 2] || pv.rootkey,
-                                    name: '上一级',
-                                    type: 'p'
-                                });
-                            }
-
-                            if (!(pv.chooseItemInfos.length > 0)) {
-                                _context7.next = 29;
-                                break;
-                            }
-
-                            _iteratorNormalCompletion6 = true;
-                            _didIteratorError6 = false;
-                            _iteratorError6 = undefined;
-                            _context7.prev = 13;
-
-                            for (_iterator6 = pv.libraryItemInfos[Symbol.iterator](); !(_iteratorNormalCompletion6 = (_step6 = _iterator6.next()).done); _iteratorNormalCompletion6 = true) {
-                                info = _step6.value;
-                                index = pv.chooseItemInfos.keyList.indexOf(info.key);
-
-                                if (index !== -1) {
-                                    pv.chooseItemInfos[index] = info;
-                                }
-                            }
-                            _context7.next = 21;
-                            break;
-
-                        case 17:
-                            _context7.prev = 17;
-                            _context7.t0 = _context7['catch'](13);
-                            _didIteratorError6 = true;
-                            _iteratorError6 = _context7.t0;
-
-                        case 21:
-                            _context7.prev = 21;
-                            _context7.prev = 22;
-
-                            if (!_iteratorNormalCompletion6 && _iterator6.return) {
-                                _iterator6.return();
-                            }
-
-                        case 24:
-                            _context7.prev = 24;
-
-                            if (!_didIteratorError6) {
-                                _context7.next = 27;
-                                break;
-                            }
-
-                            throw _iteratorError6;
-
-                        case 27:
-                            return _context7.finish(24);
-
-                        case 28:
-                            return _context7.finish(21);
-
-                        case 29:
-                            render(pv);
-
-                        case 30:
-                        case 'end':
-                            return _context7.stop();
-                    }
-                }
-            }, _callee7, this, [[1,, 5, 8], [13, 17, 21, 29], [22,, 24, 28]]);
-        }));
-        return function freshAsync(_x17) {
-            return ref.apply(this, arguments);
-        };
     }();
 
     function render(pv) {
@@ -1169,30 +1519,31 @@ var zouke = {};
         var libraryItemContainer = pv.libraryItemContainer;
         var chooseItemContainer = pv.chooseItemContainer;
 
+
         var max = Math.max(libraryItemInfos.length, libraryItems.length);
-        for (var _i = 0; _i < max; ++_i) {
-            if (!libraryItems[_i]) {
-                libraryItems[_i] = new Item();
-                libraryItems[_i].itemDom.dataset.index = _i;
-                libraryItemContainer.appendChild(libraryItems[_i].itemDom);
+        for (var i = 0; i < max; ++i) {
+            if (!libraryItems[i]) {
+                libraryItems[i] = new Item();
+                libraryItems[i].itemDom.dataset.index = i;
+                libraryItemContainer.appendChild(libraryItems[i].itemDom);
             }
-            libraryItems[_i].render(libraryItemInfos[_i]);
+            libraryItems[i].render(libraryItemInfos[i]);
         }
 
         var path = '<span data-index="-1">root</span>';
-        for (var _i2 = 0; _i2 < pv.path.length; ++_i2) {
-            path += '<span data-index="' + _i2 + '">' + pv.path[_i2] + '</span>';
+        for (var _i = 0; _i < pv.path.length; ++_i) {
+            path += '<span data-index="' + _i + '">' + pv.path[_i] + '</span>';
         }
         libraryPath.innerHTML = path;
 
         max = Math.max(chooseItemInfos.length, chooseItems.length);
-        for (var _i3 = 0; _i3 < max; ++_i3) {
-            if (!chooseItems[_i3]) {
-                chooseItems[_i3] = new Item();
-                chooseItems[_i3].itemDom.dataset.index = _i3;
-                chooseItemContainer.appendChild(chooseItems[_i3].itemDom);
+        for (var _i2 = 0; _i2 < max; ++_i2) {
+            if (!chooseItems[_i2]) {
+                chooseItems[_i2] = new Item();
+                chooseItems[_i2].itemDom.dataset.index = _i2;
+                chooseItemContainer.appendChild(chooseItems[_i2].itemDom);
             }
-            chooseItems[_i3].render(chooseItemInfos[_i3]);
+            chooseItems[_i2].render(chooseItemInfos[_i2]);
         }
     }
 
@@ -1239,7 +1590,7 @@ var zouke = {};
     }
 
     function listener(pv) {
-        var _this5 = this;
+        var _this7 = this;
 
         var container = pv.container;
         var form = pv.form;
@@ -1255,6 +1606,7 @@ var zouke = {};
         var chooseButtons = pv.chooseButtons;
         var chooseFileInfo = pv.chooseFileInfo;
         var menu = pv.menu;
+
 
         tabContainer.addEventListener('click', function (e) {
             var target = e.target;
@@ -1316,66 +1668,66 @@ var zouke = {};
             }
         }, true);
         libraryButtons[0].querySelector('input').on('change', function () {
-            var ref = babelHelpers.asyncToGenerator(regeneratorRuntime.mark(function _callee8(e) {
-                var infoList, _iteratorNormalCompletion9, _didIteratorError9, _iteratorError9, _iterator9, _step9, _info;
+            var ref = babelHelpers.asyncToGenerator(regeneratorRuntime.mark(function _callee10(e) {
+                var infoList, _iteratorNormalCompletion9, _didIteratorError9, _iteratorError9, _iterator9, _step9, info;
 
-                return regeneratorRuntime.wrap(function _callee8$(_context8) {
+                return regeneratorRuntime.wrap(function _callee10$(_context10) {
                     while (1) {
-                        switch (_context8.prev = _context8.next) {
+                        switch (_context10.prev = _context10.next) {
                             case 0:
                                 //上传
                                 showLoading(pv);
-                                _context8.next = 3;
+                                _context10.next = 3;
                                 return zouke.net.uploadFileListAsync(e.target.files, pv.pathKey[pv.pathKey.length - 1] || pv.rootkey);
 
                             case 3:
-                                infoList = _context8.sent;
+                                infoList = _context10.sent;
                                 _iteratorNormalCompletion9 = true;
                                 _didIteratorError9 = false;
                                 _iteratorError9 = undefined;
-                                _context8.prev = 7;
+                                _context10.prev = 7;
 
                                 for (_iterator9 = infoList[Symbol.iterator](); !(_iteratorNormalCompletion9 = (_step9 = _iterator9.next()).done); _iteratorNormalCompletion9 = true) {
-                                    _info = _step9.value;
+                                    info = _step9.value;
 
-                                    if (_info.key) {
-                                        pv.libraryItemInfos.push(_info);
-                                        pv.chooseItemInfos.push(_info);
-                                        pv.chooseItemInfos.keyList.push(_info.key);
+                                    if (info.key) {
+                                        pv.libraryItemInfos.push(info);
+                                        pv.chooseItemInfos.push(info);
+                                        pv.chooseItemInfos.keyList.push(info.key);
                                     }
                                 }
-                                _context8.next = 15;
+                                _context10.next = 15;
                                 break;
 
                             case 11:
-                                _context8.prev = 11;
-                                _context8.t0 = _context8['catch'](7);
+                                _context10.prev = 11;
+                                _context10.t0 = _context10['catch'](7);
                                 _didIteratorError9 = true;
-                                _iteratorError9 = _context8.t0;
+                                _iteratorError9 = _context10.t0;
 
                             case 15:
-                                _context8.prev = 15;
-                                _context8.prev = 16;
+                                _context10.prev = 15;
+                                _context10.prev = 16;
 
                                 if (!_iteratorNormalCompletion9 && _iterator9.return) {
                                     _iterator9.return();
                                 }
 
                             case 18:
-                                _context8.prev = 18;
+                                _context10.prev = 18;
 
                                 if (!_didIteratorError9) {
-                                    _context8.next = 21;
+                                    _context10.next = 21;
                                     break;
                                 }
 
                                 throw _iteratorError9;
 
                             case 21:
-                                return _context8.finish(18);
+                                return _context10.finish(18);
 
                             case 22:
-                                return _context8.finish(15);
+                                return _context10.finish(15);
 
                             case 23:
                                 render(pv);
@@ -1383,22 +1735,21 @@ var zouke = {};
 
                             case 25:
                             case 'end':
-                                return _context8.stop();
+                                return _context10.stop();
                         }
                     }
-                }, _callee8, _this5, [[7, 11, 15, 23], [16,, 18, 22]]);
-            })),
-                _this = _this5;
+                }, _callee10, _this7, [[7, 11, 15, 23], [16,, 18, 22]]);
+            }));
             return function (_x18) {
-                return ref.apply(_this, arguments);
+                return ref.apply(this, arguments);
             };
         }(), true);
         libraryButtons[1].on('click', function () {
-            var ref = babelHelpers.asyncToGenerator(regeneratorRuntime.mark(function _callee9(e) {
+            var ref = babelHelpers.asyncToGenerator(regeneratorRuntime.mark(function _callee11(e) {
                 var info, index, key, p;
-                return regeneratorRuntime.wrap(function _callee9$(_context9) {
+                return regeneratorRuntime.wrap(function _callee11$(_context11) {
                     while (1) {
-                        switch (_context9.prev = _context9.next) {
+                        switch (_context11.prev = _context11.next) {
                             case 0:
                                 //新建文件夹
                                 info = {
@@ -1413,12 +1764,12 @@ var zouke = {};
                                 index = -1;
 
                                 showLoading(pv);
-                                _context9.prev = 3;
-                                _context9.next = 6;
+                                _context11.prev = 3;
+                                _context11.next = 6;
                                 return zouke.resource.postAsync('/file/createfile', info);
 
                             case 6:
-                                key = _context9.sent.key;
+                                key = _context11.sent.key;
 
                                 info.key = key;
                                 delete info.pkey;
@@ -1432,49 +1783,48 @@ var zouke = {};
                                 render(pv);
 
                             case 12:
-                                _context9.prev = 12;
+                                _context11.prev = 12;
 
                                 hideLoading(pv);
-                                return _context9.finish(12);
+                                return _context11.finish(12);
 
                             case 15:
                                 if (!(index > -1)) {
-                                    _context9.next = 28;
+                                    _context11.next = 28;
                                     break;
                                 }
 
-                                _context9.next = 18;
+                                _context11.next = 18;
                                 return pv.libraryItems[index].renameAsync();
 
                             case 18:
-                                p = _context9.sent;
-                                _context9.prev = 19;
+                                p = _context11.sent;
+                                _context11.prev = 19;
 
                                 showLoading(pv);
-                                _context9.next = 23;
+                                _context11.next = 23;
                                 return p;
 
                             case 23:
-                                pv.libraryItemInfos[index].name = _context9.sent;
+                                pv.libraryItemInfos[index].name = _context11.sent;
 
                                 render(pv);
 
                             case 25:
-                                _context9.prev = 25;
+                                _context11.prev = 25;
 
                                 hideLoading(pv);
-                                return _context9.finish(25);
+                                return _context11.finish(25);
 
                             case 28:
                             case 'end':
-                                return _context9.stop();
+                                return _context11.stop();
                         }
                     }
-                }, _callee9, _this5, [[3,, 12, 15], [19,, 25, 28]]);
-            })),
-                _this = _this5;
+                }, _callee11, _this7, [[3,, 12, 15], [19,, 25, 28]]);
+            }));
             return function (_x19) {
-                return ref.apply(_this, arguments);
+                return ref.apply(this, arguments);
             };
         }());
 
@@ -1527,47 +1877,47 @@ var zouke = {};
         }, true);
 
         menu.on('click', function () {
-            var ref = babelHelpers.asyncToGenerator(regeneratorRuntime.mark(function _callee10(e) {
+            var ref = babelHelpers.asyncToGenerator(regeneratorRuntime.mark(function _callee12(e) {
                 var p, i;
-                return regeneratorRuntime.wrap(function _callee10$(_context10) {
+                return regeneratorRuntime.wrap(function _callee12$(_context12) {
                     while (1) {
-                        switch (_context10.prev = _context10.next) {
+                        switch (_context12.prev = _context12.next) {
                             case 0:
-                                _context10.t0 = e.target.className;
-                                _context10.next = _context10.t0 === 'rename' ? 3 : _context10.t0 === 'delete' ? 16 : _context10.t0 === 'toggle' ? 26 : 30;
+                                _context12.t0 = e.target.className;
+                                _context12.next = _context12.t0 === 'rename' ? 3 : _context12.t0 === 'delete' ? 16 : _context12.t0 === 'toggle' ? 26 : 30;
                                 break;
 
                             case 3:
-                                _context10.next = 5;
+                                _context12.next = 5;
                                 return opItem.renameAsync();
 
                             case 5:
-                                p = _context10.sent;
-                                _context10.prev = 6;
+                                p = _context12.sent;
+                                _context12.prev = 6;
 
                                 showLoading(pv);
-                                _context10.next = 10;
+                                _context12.next = 10;
                                 return p;
 
                             case 10:
-                                pv.libraryItemInfos[index].name = _context10.sent;
+                                pv.libraryItemInfos[index].name = _context12.sent;
 
                                 render(pv);
 
                             case 12:
-                                _context10.prev = 12;
+                                _context12.prev = 12;
 
                                 hideLoading(pv);
-                                return _context10.finish(12);
+                                return _context12.finish(12);
 
                             case 15:
-                                return _context10.abrupt('break', 30);
+                                return _context12.abrupt('break', 30);
 
                             case 16:
-                                _context10.prev = 16;
+                                _context12.prev = 16;
 
                                 showLoading(pv);
-                                _context10.next = 20;
+                                _context12.next = 20;
                                 return opItem.deleteAsync();
 
                             case 20:
@@ -1575,13 +1925,13 @@ var zouke = {};
                                 render(pv);
 
                             case 22:
-                                _context10.prev = 22;
+                                _context12.prev = 22;
 
                                 hideLoading(pv);
-                                return _context10.finish(22);
+                                return _context12.finish(22);
 
                             case 25:
-                                return _context10.abrupt('break', 30);
+                                return _context12.abrupt('break', 30);
 
                             case 26:
                                 i = pv.chooseItemInfos.keyList.indexOf(opItem.info.key);
@@ -1594,18 +1944,17 @@ var zouke = {};
                                     pv.chooseItemInfos.keyList.splice(i, 1);
                                 }
                                 render(pv);
-                                return _context10.abrupt('break', 30);
+                                return _context12.abrupt('break', 30);
 
                             case 30:
                             case 'end':
-                                return _context10.stop();
+                                return _context12.stop();
                         }
                     }
-                }, _callee10, _this5, [[6,, 12, 15], [16,, 22, 25]]);
-            })),
-                _this = _this5;
+                }, _callee12, _this7, [[6,, 12, 15], [16,, 22, 25]]);
+            }));
             return function (_x20) {
-                return ref.apply(_this, arguments);
+                return ref.apply(this, arguments);
             };
         }());
 
@@ -1613,10 +1962,10 @@ var zouke = {};
             //显示文件信息
             e.stopPropagation();
             if (e.target.classList.contains('item')) {
-                var _item = pv.libraryItems[e.target.dataset.index];
-                var _info2 = _item.info;
-                if (_item.isFile()) {
-                    libraryFileInfo.innerHTML = 'width&ensp;<span>' + _info2.width + '</span>&emsp;&emsp;height&ensp;<span>' + _info2.height + '</span>&emsp;&emsp;size&ensp;<span>' + _info2.size + 'k</span>';
+                var item = pv.libraryItems[e.target.dataset.index];
+                var info = item.info;
+                if (item.isFile()) {
+                    libraryFileInfo.innerHTML = 'width&ensp;<span>' + info.width + '</span>&emsp;&emsp;height&ensp;<span>' + info.height + '</span>&emsp;&emsp;size&ensp;<span>' + info.size + 'k</span>';
                     return;
                 }
             }
@@ -1627,11 +1976,11 @@ var zouke = {};
             //显示文件信息
             e.stopPropagation();
             if (e.target.classList.contains('item')) {
-                var _item2 = pv.chooseItems[e.target.dataset.index];
-                var _info3 = _item2.info;
+                var item = pv.chooseItems[e.target.dataset.index];
+                var info = item.info;
 
-                if (_item2.isFile()) {
-                    chooseFileInfo.innerHTML = 'width&ensp;<span>' + _info3.width + '</span>&emsp;&emsp;height&ensp;<span>' + _info3.height + '</span>&emsp;&emsp;size&ensp;<span>' + _info3.size + 'k</span>';
+                if (item.isFile()) {
+                    chooseFileInfo.innerHTML = 'width&ensp;<span>' + info.width + '</span>&emsp;&emsp;height&ensp;<span>' + info.height + '</span>&emsp;&emsp;size&ensp;<span>' + info.size + 'k</span>';
                     return;
                 }
             }
@@ -1647,16 +1996,16 @@ var zouke = {};
         libraryItemContainer.on('dblclick', function (e) {
             //进入文件夹
             if (e.target.classList.contains('item')) {
-                var _info4 = pv.libraryItemInfos[e.target.dataset.index];
-                switch (_info4.type) {
+                var info = pv.libraryItemInfos[e.target.dataset.index];
+                switch (info.type) {
                     case 'p':
                         pv.path.pop();
                         pv.pathKey.pop();
                         freshAsync(pv);
                         break;
                     case 'd':
-                        pv.path.push(_info4.name);
-                        pv.pathKey.push(_info4.key);
+                        pv.path.push(info.name);
+                        pv.pathKey.push(info.key);
                         freshAsync(pv);
                         break;
                 }
@@ -1733,46 +2082,45 @@ var zouke = {};
                 e.preventDefault();
             },
             drop: function drop(e) {
-                var _this6 = this;
+                var _this8 = this;
 
-                return babelHelpers.asyncToGenerator(regeneratorRuntime.mark(function _callee11() {
-                    var _item3;
-
-                    return regeneratorRuntime.wrap(function _callee11$(_context11) {
+                return babelHelpers.asyncToGenerator(regeneratorRuntime.mark(function _callee13() {
+                    var item;
+                    return regeneratorRuntime.wrap(function _callee13$(_context13) {
                         while (1) {
-                            switch (_context11.prev = _context11.next) {
+                            switch (_context13.prev = _context13.next) {
                                 case 0:
-                                    if (!_this6.preItemDom) {
-                                        _context11.next = 13;
+                                    if (!_this8.preItemDom) {
+                                        _context13.next = 13;
                                         break;
                                     }
 
                                     showLoading(pv);
-                                    _context11.prev = 2;
-                                    _item3 = _this6.item;
-                                    _context11.next = 6;
-                                    return _this6.item.moveToAsync(_this6.preItemDom.dataset.key);
+                                    _context13.prev = 2;
+                                    item = _this8.item;
+                                    _context13.next = 6;
+                                    return _this8.item.moveToAsync(_this8.preItemDom.dataset.key);
 
                                 case 6:
-                                    pv.libraryItemInfos.splice(parseInt(_item3.itemDom.dataset.index, 10), 1);
+                                    pv.libraryItemInfos.splice(parseInt(item.itemDom.dataset.index, 10), 1);
                                     render(pv);
 
                                 case 8:
-                                    _context11.prev = 8;
+                                    _context13.prev = 8;
 
-                                    _this6.preItemDom.classList.remove('drop');
+                                    _this8.preItemDom.classList.remove('drop');
                                     hideLoading(pv);
-                                    return _context11.finish(8);
+                                    return _context13.finish(8);
 
                                 case 12:
-                                    delete _this6.preItemDom;
+                                    delete _this8.preItemDom;
 
                                 case 13:
                                 case 'end':
-                                    return _context11.stop();
+                                    return _context13.stop();
                             }
                         }
-                    }, _callee11, _this6, [[2,, 8, 12]]);
+                    }, _callee13, _this8, [[2,, 8, 12]]);
                 }))();
             }
         };
@@ -1803,4 +2151,73 @@ var zouke = {};
     }
 
     window.zouke.ImageForm = ImageForm;
+})();
+
+(function () {
+    //权限控制类
+    var pri = new WeakMap();
+
+    zouke.PermissionManager = function () {
+        function PermissionManager(acl) {
+            babelHelpers.classCallCheck(this, PermissionManager);
+
+            var allPermissionNames = Object.keys(acl);
+            var permissionMap = {};
+
+            var styleText = '';
+            var _iteratorNormalCompletion10 = true;
+            var _didIteratorError10 = false;
+            var _iteratorError10 = undefined;
+
+            try {
+                for (var _iterator10 = Object.entries(acl)[Symbol.iterator](), _step10; !(_iteratorNormalCompletion10 = (_step10 = _iterator10.next()).done); _iteratorNormalCompletion10 = true) {
+                    var _step10$value = babelHelpers.slicedToArray(_step10.value, 2);
+
+                    var key = _step10$value[0];
+                    var value = _step10$value[1];
+
+                    permissionMap[key] = !!value;
+                    if (!permissionMap[key]) {
+                        styleText += '[data-permission="' + key + '"]{display:none!important;}';
+                    }
+                }
+            } catch (err) {
+                _didIteratorError10 = true;
+                _iteratorError10 = err;
+            } finally {
+                try {
+                    if (!_iteratorNormalCompletion10 && _iterator10.return) {
+                        _iterator10.return();
+                    }
+                } finally {
+                    if (_didIteratorError10) {
+                        throw _iteratorError10;
+                    }
+                }
+            }
+
+            pri.set(this, {
+                all: allPermissionNames,
+                map: permissionMap
+            });
+
+            var style = document.createElement('style');
+            style.dataset.from = 'permission';
+            style.innerHTML = styleText;
+            document.head.appendChild(style);
+        }
+
+        babelHelpers.createClass(PermissionManager, [{
+            key: 'canDo',
+            value: function canDo(p) {
+                return pri.get(this).map[p];
+            }
+        }, {
+            key: 'nameList',
+            get: function get() {
+                return [].concat(babelHelpers.toConsumableArray(pri.get(this).all));
+            }
+        }]);
+        return PermissionManager;
+    }();
 })();
